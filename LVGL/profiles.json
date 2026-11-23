@@ -1,0 +1,552 @@
+{
+  "version": "1.6",
+  "schema": "Aphelion 本地屏幕规范 1.6 第 1 章",
+  "profiles": [
+    {
+      "id": "oled-042-7240",
+      "name": "0.42 英寸微型 OLED",
+      "tech": "oled",
+      "driver": "SSD1306",
+      "res": [
+        72,
+        40
+      ],
+      "diag": 0.42,
+      "color": "1bpp",
+      "frame_ms": 15,
+      "input": "button"
+    },
+    {
+      "id": "oled-12832",
+      "name": "0.91 英寸 OLED",
+      "tech": "oled",
+      "driver": "SSD1306",
+      "res": [
+        128,
+        32
+      ],
+      "diag": 0.91,
+      "color": "1bpp",
+      "frame_ms": 16,
+      "input": "button"
+    },
+    {
+      "id": "oled-12864",
+      "name": "0.96 英寸 OLED",
+      "tech": "oled",
+      "driver": "SSD1306 / SH1106",
+      "res": [
+        128,
+        64
+      ],
+      "diag": 0.96,
+      "color": "1bpp",
+      "frame_ms": 25,
+      "input": "button"
+    },
+    {
+      "id": "oled-12864-13",
+      "name": "1.3 英寸 OLED",
+      "tech": "oled",
+      "driver": "SH1106",
+      "res": [
+        128,
+        64
+      ],
+      "diag": 1.3,
+      "color": "1bpp",
+      "frame_ms": 25,
+      "input": "button"
+    },
+    {
+      "id": "oled-154-12864",
+      "name": "1.54 英寸 OLED",
+      "tech": "oled",
+      "driver": "SSD1309",
+      "res": [
+        128,
+        64
+      ],
+      "diag": 1.54,
+      "color": "1bpp",
+      "frame_ms": 25,
+      "input": "button"
+    },
+    {
+      "id": "oled-242-12864",
+      "name": "2.42 英寸大字 OLED",
+      "tech": "oled",
+      "driver": "SSD1309",
+      "res": [
+        128,
+        64
+      ],
+      "diag": 2.42,
+      "color": "1bpp",
+      "frame_ms": 25,
+      "input": "encoder"
+    },
+    {
+      "id": "oled-gray-128",
+      "name": "1.5 英寸灰阶 OLED",
+      "tech": "oled",
+      "driver": "SSD1327",
+      "res": [
+        128,
+        128
+      ],
+      "diag": 1.5,
+      "color": "gray16",
+      "frame_ms": 20,
+      "input": "button"
+    },
+    {
+      "id": "oled-312-25664",
+      "name": "3.12 英寸灰阶 OLED",
+      "tech": "oled",
+      "driver": "SSD1322",
+      "res": [
+        256,
+        64
+      ],
+      "diag": 3.12,
+      "color": "gray16",
+      "frame_ms": 20,
+      "input": "encoder"
+    },
+    {
+      "id": "tft-16080",
+      "name": "0.96 英寸 TFT",
+      "tech": "tft-ips",
+      "driver": "ST7735S",
+      "res": [
+        160,
+        80
+      ],
+      "diag": 0.96,
+      "color": "rgb565",
+      "frame_ms": 16,
+      "input": "button"
+    },
+    {
+      "id": "tft-114-240135",
+      "name": "1.14 英寸 TFT",
+      "tech": "tft-ips",
+      "driver": "ST7789",
+      "res": [
+        240,
+        135
+      ],
+      "diag": 1.14,
+      "color": "rgb565",
+      "frame_ms": 20,
+      "input": "buttons"
+    },
+    {
+      "id": "tft-147-320172",
+      "name": "1.47 英寸圆角 TFT",
+      "tech": "tft-ips",
+      "driver": "ST7789",
+      "res": [
+        320,
+        172
+      ],
+      "diag": 1.47,
+      "color": "rgb565",
+      "frame_ms": 22,
+      "input": "button",
+      "shape": "rounded",
+      "corner_px": 24
+    },
+    {
+      "id": "tft-240240",
+      "name": "1.3 英寸 TFT",
+      "tech": "tft-ips",
+      "driver": "ST7789",
+      "res": [
+        240,
+        240
+      ],
+      "diag": 1.3,
+      "color": "rgb565",
+      "frame_ms": 25,
+      "input": "button"
+    },
+    {
+      "id": "tft-240280",
+      "name": "1.69 英寸圆角 TFT",
+      "tech": "tft-ips",
+      "driver": "ST7789",
+      "res": [
+        240,
+        280
+      ],
+      "diag": 1.69,
+      "color": "rgb565",
+      "frame_ms": 30,
+      "input": "touch",
+      "shape": "rounded",
+      "corner_px": 32
+    },
+    {
+      "id": "tft-round-240",
+      "name": "1.28 英寸圆形 TFT",
+      "tech": "tft-ips",
+      "driver": "GC9A01",
+      "res": [
+        240,
+        240
+      ],
+      "diag": 1.28,
+      "color": "rgb565",
+      "frame_ms": 25,
+      "input": "encoder",
+      "shape": "round"
+    },
+    {
+      "id": "tft-180-160128",
+      "name": "1.8 英寸 TN TFT",
+      "tech": "tft-tn",
+      "driver": "ST7735S",
+      "res": [
+        160,
+        128
+      ],
+      "diag": 1.8,
+      "color": "rgb565",
+      "frame_ms": 25,
+      "input": "buttons"
+    },
+    {
+      "id": "tft-320170",
+      "name": "1.9 英寸 TFT",
+      "tech": "tft-ips",
+      "driver": "ST7789",
+      "res": [
+        320,
+        170
+      ],
+      "diag": 1.9,
+      "color": "rgb565",
+      "frame_ms": 25,
+      "input": "button"
+    },
+    {
+      "id": "tft-200-320240",
+      "name": "2.0 英寸 TFT",
+      "tech": "tft-ips",
+      "driver": "ST7789",
+      "res": [
+        320,
+        240
+      ],
+      "diag": 2.0,
+      "color": "rgb565",
+      "frame_ms": 35,
+      "input": "buttons"
+    },
+    {
+      "id": "tft-320240",
+      "name": "2.4 英寸 TFT",
+      "tech": "tft-ips",
+      "driver": "ILI9341",
+      "res": [
+        320,
+        240
+      ],
+      "diag": 2.4,
+      "color": "rgb565",
+      "frame_ms": 40,
+      "input": "touch"
+    },
+    {
+      "id": "tft-280-320240",
+      "name": "2.8 英寸 TFT",
+      "tech": "tft-ips",
+      "driver": "ILI9341",
+      "res": [
+        320,
+        240
+      ],
+      "diag": 2.8,
+      "color": "rgb565",
+      "frame_ms": 40,
+      "input": "touch"
+    },
+    {
+      "id": "tft-round-480",
+      "name": "2.1 英寸圆形 TFT",
+      "tech": "tft-ips",
+      "driver": "ST7701S",
+      "res": [
+        480,
+        480
+      ],
+      "diag": 2.1,
+      "color": "rgb565",
+      "frame_ms": 17,
+      "input": "encoder",
+      "shape": "round"
+    },
+    {
+      "id": "tft-480320",
+      "name": "3.5 英寸 TFT",
+      "tech": "tft-ips",
+      "driver": "ILI9488",
+      "res": [
+        480,
+        320
+      ],
+      "diag": 3.5,
+      "color": "rgb565",
+      "frame_ms": 50,
+      "input": "touch"
+    },
+    {
+      "id": "tft-400-480480",
+      "name": "4.0 英寸方形 RGB TFT",
+      "tech": "tft-ips",
+      "driver": "ST7701S",
+      "res": [
+        480,
+        480
+      ],
+      "diag": 4.0,
+      "color": "rgb565",
+      "frame_ms": 17,
+      "input": "touch"
+    },
+    {
+      "id": "tft-430-800480",
+      "name": "4.3 英寸 RGB TFT",
+      "tech": "tft-ips",
+      "driver": "ST7262",
+      "res": [
+        800,
+        480
+      ],
+      "diag": 4.3,
+      "color": "rgb565",
+      "frame_ms": 17,
+      "input": "touch"
+    },
+    {
+      "id": "tft-800480",
+      "name": "5 英寸 RGB TFT",
+      "tech": "tft-ips",
+      "driver": "ST7262 (RGB)",
+      "res": [
+        800,
+        480
+      ],
+      "diag": 5.0,
+      "color": "rgb565",
+      "frame_ms": 17,
+      "input": "touch"
+    },
+    {
+      "id": "tft-700-1024600",
+      "name": "7.0 英寸 RGB TFT",
+      "tech": "tft-ips",
+      "driver": "EK9716",
+      "res": [
+        1024,
+        600
+      ],
+      "diag": 7.0,
+      "color": "rgb565",
+      "frame_ms": 17,
+      "input": "touch"
+    },
+    {
+      "id": "amoled-180-368448",
+      "name": "1.8 英寸圆角 AMOLED",
+      "tech": "amoled",
+      "driver": "SH8601",
+      "res": [
+        368,
+        448
+      ],
+      "diag": 1.8,
+      "color": "rgb565",
+      "frame_ms": 17,
+      "input": "touch",
+      "shape": "rounded",
+      "corner_px": 48
+    },
+    {
+      "id": "amoled-536240",
+      "name": "1.91 英寸 AMOLED",
+      "tech": "amoled",
+      "driver": "RM67162",
+      "res": [
+        536,
+        240
+      ],
+      "diag": 1.91,
+      "color": "rgb565",
+      "frame_ms": 17,
+      "input": "button"
+    },
+    {
+      "id": "amoled-round-466",
+      "name": "1.43 英寸圆形 AMOLED",
+      "tech": "amoled",
+      "driver": "CO5300",
+      "res": [
+        466,
+        466
+      ],
+      "diag": 1.43,
+      "color": "rgb565",
+      "frame_ms": 17,
+      "input": "touch",
+      "shape": "round"
+    },
+    {
+      "id": "mlcd-128128",
+      "name": "1.28 英寸 Memory LCD",
+      "tech": "mlcd",
+      "driver": "Sharp LS013B7DH03",
+      "res": [
+        128,
+        128
+      ],
+      "diag": 1.28,
+      "color": "1bpp",
+      "frame_ms": 16,
+      "input": "button"
+    },
+    {
+      "id": "mlcd-400240",
+      "name": "2.7 英寸 Memory LCD",
+      "tech": "mlcd",
+      "driver": "Sharp LS027B7DH01",
+      "res": [
+        400,
+        240
+      ],
+      "diag": 2.7,
+      "color": "1bpp",
+      "frame_ms": 40,
+      "input": "button"
+    },
+    {
+      "id": "mlcd-color-176",
+      "name": "1.28 英寸彩色 Memory LCD",
+      "tech": "mlcd",
+      "driver": "JDI LPM013M126",
+      "res": [
+        176,
+        176
+      ],
+      "diag": 1.28,
+      "color": "rgb8",
+      "frame_ms": 30,
+      "input": "button"
+    },
+    {
+      "id": "rlcd-400300",
+      "name": "4.2 英寸反射式 LCD",
+      "tech": "rlcd",
+      "driver": "ST7305",
+      "res": [
+        400,
+        300
+      ],
+      "diag": 4.2,
+      "color": "1bpp",
+      "frame_ms": 40,
+      "input": "button"
+    },
+    {
+      "id": "epd-200200-3c",
+      "name": "1.54 英寸三色墨水屏",
+      "tech": "epd",
+      "driver": "SSD1681",
+      "res": [
+        200,
+        200
+      ],
+      "diag": 1.54,
+      "color": "epd3",
+      "frame_ms": 3000,
+      "partial_ms": 400,
+      "input": "button"
+    },
+    {
+      "id": "epd-213-250122",
+      "name": "2.13 英寸墨水屏",
+      "tech": "epd",
+      "driver": "SSD1680",
+      "res": [
+        250,
+        122
+      ],
+      "diag": 2.13,
+      "color": "1bpp",
+      "frame_ms": 2000,
+      "partial_ms": 300,
+      "input": "button"
+    },
+    {
+      "id": "epd-296128",
+      "name": "2.9 英寸墨水屏",
+      "tech": "epd",
+      "driver": "SSD1680",
+      "res": [
+        296,
+        128
+      ],
+      "diag": 2.9,
+      "color": "1bpp",
+      "frame_ms": 2000,
+      "partial_ms": 300,
+      "input": "button"
+    },
+    {
+      "id": "epd-400300-g4",
+      "name": "4.2 英寸 4 灰阶墨水屏",
+      "tech": "epd",
+      "driver": "SSD1683",
+      "res": [
+        400,
+        300
+      ],
+      "diag": 4.2,
+      "color": "gray4",
+      "frame_ms": 2500,
+      "partial_ms": 400,
+      "input": "button"
+    },
+    {
+      "id": "epd-600448-7c",
+      "name": "5.65 英寸七色墨水屏",
+      "tech": "epd",
+      "driver": "ACeP",
+      "res": [
+        600,
+        448
+      ],
+      "diag": 5.65,
+      "color": "epd7",
+      "frame_ms": 12000,
+      "input": "button"
+    },
+    {
+      "id": "epd-750-800480",
+      "name": "7.5 英寸墨水屏",
+      "tech": "epd",
+      "driver": "UC8179",
+      "res": [
+        800,
+        480
+      ],
+      "diag": 7.5,
+      "color": "1bpp",
+      "frame_ms": 4000,
+      "partial_ms": 500,
+      "input": "buttons"
+    }
+  ]
+}
