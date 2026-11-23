@@ -1,0 +1,66 @@
+{
+  "version": "1.6",
+  "unit": {
+    "freq": "Hz",
+    "ms": "milliseconds"
+  },
+  "tones": {
+    "confirm": {
+      "label": "按键确认",
+      "default_enabled": false,
+      "respect_dnd": true,
+      "steps": [
+        {
+          "freq_hz": 2000,
+          "on_ms": 30,
+          "off_ms": 0
+        }
+      ],
+      "repeat": 1,
+      "group_gap_ms": 0
+    },
+    "timer_done": {
+      "label": "计时时间到",
+      "default_enabled": true,
+      "respect_dnd": true,
+      "steps": [
+        {
+          "freq_hz": 2400,
+          "on_ms": 80,
+          "off_ms": 80
+        },
+        {
+          "freq_hz": 2400,
+          "on_ms": 80,
+          "off_ms": 80
+        },
+        {
+          "freq_hz": 2400,
+          "on_ms": 80,
+          "off_ms": 0
+        }
+      ],
+      "repeat": 3,
+      "group_gap_ms": 400
+    },
+    "safety_alert": {
+      "label": "安全事件",
+      "default_enabled": true,
+      "respect_dnd": false,
+      "steps": [
+        {
+          "freq_hz": 1800,
+          "on_ms": 250,
+          "off_ms": 150
+        },
+        {
+          "freq_hz": 1800,
+          "on_ms": 250,
+          "off_ms": 0
+        }
+      ],
+      "repeat": 1,
+      "group_gap_ms": 0
+    }
+  }
+}

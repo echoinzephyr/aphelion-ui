@@ -1101,8 +1101,8 @@ ui/
 | `brand-wordmark` | 品牌字标 | 系统字体（AP-BRN-01） | ≥ 12 px | CSS | 现有 | 1.4 |
 | `brand-mark` | 品牌符号 | `ui/brand/brand-mark.svg` | 20 × 20 | SVG | 草图 | 1.4 |
 | `brand-favicon` | 网站图标 | `ui/brand/favicon.svg` | 20 × 20（≤ 600 B） | SVG data URI | 草图 | 1.4 |
-| `brand-touch-icon` | 主屏图标 | `ui/brand/touch-icon.png` | 180 × 180 | PNG | 计划 | 1.4 |
-| `brand-boot` | 本地屏开机画面 | `ui/brand/boot-1bpp.txt` / `boot.svg` | 按档案 | 1 bpp / SVG | 计划 | 1.4 |
+| `brand-touch-icon` | 主屏图标 | `ui/brand/touch-icon.png` | 180 × 180 | PNG | 草图 | 1.4 |
+| `brand-boot` | 本地屏开机画面 | `ui/brand/boot-1bpp.txt` / `boot.svg` | 128 × 64 | 1 bpp / SVG | 草图 | 1.4 |
 | `ap-i-*`（45 个基础图标） | 界面图标 | `ui/icons/*.svg` | 20 × 20 | SVG | 现有 | 1.3 |
 | `ap-i-calendar` | 界面图标（应用） | `ui/icons/calendar.svg` | 20 × 20 | SVG | 草图 | 1.4 |
 | `ap-i-timer` | 界面图标（应用） | `ui/icons/timer.svg` | 20 × 20 | SVG | 草图 | 1.4 |
@@ -1111,6 +1111,8 @@ ui/
 | `ap-i-sun` | 界面图标（亮度） | `ui/icons/sun.svg` | 20 × 20 | SVG | 草图 | 1.4 |
 | `ap-i-ble-status` | 界面图标（BLE 状态） | `ui/icons/ble-status.svg` | 20 × 20 | SVG | 草图 | 1.4 |
 | `ap-i-battery` | 界面图标（电池，条件） | `ui/icons/battery.svg` | 20 × 20 | SVG | 草图 | 1.4 |
+| `ap-i-voltage` / `current` / `usb` / `memory` / `pin` / `waveform` / `signal` / `qr` | 界面图标（硬件与信号，8 个） | `ui/icons/*.svg` | 20 × 20 | SVG | 草图 | 1.4 |
+| `ap-i-upload` / `export` / `reset` / `zoom-in` / `zoom-out` / `mute` / `volume` / `chevron-up` | 界面图标（操作与导航，8 个） | `ui/icons/*.svg` | 20 × 20 | SVG | 草图 | 1.4 |
 | `ap-app-calendar` | 启动器图标 | `ui/icons-24/calendar.svg` | 24 × 24 母版 | SVG / 1 bpp | 草图 | 1.4 |
 | `ap-app-timer` | 启动器图标 | `ui/icons-24/timer.svg` | 24 × 24 母版 | SVG / 1 bpp | 草图 | 1.4 |
 | `ap-app-gauge` | 启动器图标 | `ui/icons-24/gauge.svg` | 24 × 24 母版 | SVG / 1 bpp | 草图 | 1.4 |
@@ -1118,21 +1120,22 @@ ui/
 | `ap-app-bell` | 启动器图标 | `ui/icons-24/bell.svg` | 24 × 24 母版 | SVG / 1 bpp | 草图 | 1.4 |
 | `ap-app-settings` | 启动器图标 | `ui/icons-24/settings.svg` | 24 × 24 母版 | SVG / 1 bpp | 草图 | 1.4 |
 | `glyph-*`（10 个工具图形） | 工具图形 | `ui/glyphs/*.svg` | 132 × 40 | SVG | 现有 | 1.3 |
-| `state-offline` | 状态图形（离线） | `ui/states/offline.svg` | 132 × 40 | SVG | 计划 | 1.4 |
-| `state-setup` | 状态图形（配网） | `ui/states/setup.svg` | 132 × 40 | SVG | 计划 | 1.4 |
-| `state-unsynced` | 状态图形（未校时） | `ui/states/unsynced.svg` | 132 × 40 | SVG | 计划 | 1.4 |
-| `state-empty` | 状态图形（无数据） | `ui/states/empty.svg` | 132 × 40 | SVG | 计划 | 1.4 |
-| `state-ota` | 状态图形（固件更新） | `ui/states/ota.svg` | 132 × 40 | SVG | 计划 | 1.4 |
-| `wiring-scope` | 接线图（示波器） | `ui/wiring/scope.svg` | 按需 | SVG | 计划 | 1.4 |
-| `wiring-pwm` | 接线图（PWM） | `ui/wiring/pwm.svg` | 按需 | SVG | 计划 | 1.4 |
-| `wiring-logic` | 接线图（逻辑分析） | `ui/wiring/logic.svg` | 按需 | SVG | 计划 | 1.4 |
-| `wiring-serial` | 接线图（串口） | `ui/wiring/serial.svg` | 按需 | SVG | 计划 | 1.4 |
-| `wiring-gpio` | 接线图（GPIO） | `ui/wiring/gpio.svg` | 按需 | SVG | 计划 | 1.4 |
-| `oled-icon8-*`（8 个状态图标） | 本地屏点阵图标 | `ui/oled/icons-1bpp.txt` | 8 × 8 | 1 bpp | 计划 | 1.4 |
+| `state-offline` | 状态图形（离线） | `ui/states/offline.svg` | 132 × 40 | SVG | 草图 | 1.4 |
+| `state-setup` | 状态图形（配网） | `ui/states/setup.svg` | 132 × 40 | SVG | 草图 | 1.4 |
+| `state-unsynced` | 状态图形（未校时） | `ui/states/unsynced.svg` | 132 × 40 | SVG | 草图 | 1.4 |
+| `state-empty` | 状态图形（无数据） | `ui/states/empty.svg` | 132 × 40 | SVG | 草图 | 1.4 |
+| `state-ota` | 状态图形（固件更新） | `ui/states/ota.svg` | 132 × 40 | SVG | 草图 | 1.4 |
+| `wiring-scope` | 接线图（示波器） | `ui/wiring/scope.svg` | 160 × 80 | SVG | 草图 | 1.4 |
+| `wiring-pwm` | 接线图（PWM） | `ui/wiring/pwm.svg` | 160 × 80 | SVG | 草图 | 1.4 |
+| `wiring-logic` | 接线图（逻辑分析） | `ui/wiring/logic.svg` | 160 × 80 | SVG | 草图 | 1.4 |
+| `wiring-serial` | 接线图（串口） | `ui/wiring/serial.svg` | 160 × 80 | SVG | 草图 | 1.4 |
+| `wiring-gpio` | 接线图（GPIO） | `ui/wiring/gpio.svg` | 160 × 80 | SVG | 草图 | 1.4 |
+| `oled-icon8-*`（8 个状态图标） | 本地屏点阵图标 | `ui/oled/icons-8px-1bpp.txt` | 8 × 8 | 1 bpp | 草图 | 1.4 |
 | `oled-icon16-*` | 本地屏点阵图标 | `ui/oled/icons-1bpp.txt` | 16 × 16 | 1 bpp | 现有 | 1.3 |
 | `oled-digits-xl` / `m` | 点阵读数字体 | `ui/oled/digits-1bpp.txt` | 13 × 24 / 7 × 12 | 1 bpp | 现有 | 1.3 |
-| `oled-digits-c2` / `c3` | 点阵读数字体（扩充） | `ui/oled/digits-1bpp.txt` | 10 × 18 / 20 × 36 | 1 bpp | 计划 | 1.4 |
-| `tones-system` | 本地屏提示音 | `ui/sounds/tones.json` | 3 组音型 | JSON → C | 计划 | 1.4 |
+| `oled-digits-c2` | 点阵读数字体（C2 档） | `ui/oled/digits-c2-1bpp.txt` | 10 × 18 | 1 bpp | 草图 | 1.4 |
+| `oled-digits-c3` | 点阵读数字体（C3 档） | `ui/oled/digits-1bpp.txt` | 20 × 36 | 1 bpp | 计划 | 1.4 |
+| `tones-system` | 本地屏提示音 | `ui/sounds/tones.json` | 3 组音型 | JSON → C | 草图 | 1.4 |
 
 ### G.2 字体许可证登记
 
