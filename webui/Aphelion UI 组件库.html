@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><script>(function(){try{var m=localStorage.getItem("aphelion.kit.theme")||"auto";document.documentElement.dataset.theme=m==="auto"?(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):m}catch(e){}})();</script><link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2020%2020%22%20width=%2220%22%20height=%2220%22%3E%3Ctitle%3EAphelion%3C/title%3E%3Cstyle%3Esvg%7Bcolor:%23141414;--a:%23FF5000%7D@media(prefers-color-scheme:dark)%7Bsvg%7Bcolor:%23EDEDE9;--a:%23FF5A1A%7D%7D.ap-s%7Bfill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round%7D.ap-acc%7Bfill:var(--a)%7D%3C/style%3E%3Cpath%20class=%22ap-s%22%20d=%22M4.5%2014.5A8.2%204.6%20-35%201%201%2015.5%205.5A8.2%204.6%20-35%201%201%204.5%2014.5Z%22/%3E%3Ccircle%20class=%22ap-acc%22%20cx=%2215.5%22%20cy=%225.5%22%20r=%222.5%22/%3E%3C/svg%3E"><title>Aphelion UI 1.4 · 组件库</title>
+<style>
+/* ==========================================================================
+   Aphelion UI 1.4 · 仪器面板设计语言
+   单文件样式库。所有类名以 ap- 开头，所有令牌以 --ap- 开头。
+   不依赖外部字体、图片或脚本，可随固件离线提供。
+   ========================================================================== */
+
+/* ---------- 1. 令牌 ---------- */
+:root{
+  /* 颜色 · 机身与面板 */
+  --ap-bg:#e2e2de;          /* 机身：页面底色 */
+  --ap-panel:#f2f2ef;       /* 面板：一切内容的承载面 */
+  --ap-panel-hover:#e9e9e5; /* 面板悬停 */
+  --ap-line:#cbcbc5;        /* 结构线：面板分隔、外框 */
+  --ap-off:#d9d9d3;         /* 未点亮：轨道、电平空段、列表细线 */
+  --ap-off-hover:#cfcfc9;
+  /* 颜色 · 文字 */
+  --ap-ink:#141414;         /* 主文字、主按钮 */
+  --ap-readout:#141414;     /* 读数 XL / L 数字 */
+  --ap-readout-w:250;
+  --ap-ink-2:#3d3d39;       /* 次级正文 */
+  --ap-muted:#62625c;       /* 标签、单位、说明 */
+  --ap-faint:#9a9a94;       /* 仅用于禁用 */
+  /* 颜色 · 强调与状态 */
+  --ap-accent:#ff5000;      /* 唯一强调色：实体按键、最新数据点、削峰 */
+  --ap-focus:#d64300;       /* 焦点环专用（三背景 >= 3:1） */
+  --ap-accent-ink:#b23a00;  /* 强调色的文字版本：错误与演示标记 */
+  --ap-ok:#178a3b;          /* 仅用于在线状态灯 */
+  --ap-ok-glow:rgba(23,138,59,.2);
+  --ap-live-glow:rgba(255,80,0,.22);
+  /* 颜色 · 墨色表面上的内容 */
+  --ap-on-ink:#ffffff;      /* 墨色按钮、选中分段上的文字 */
+  --ap-ink-hover:#000000;   /* 墨色按钮悬停 */
+  --ap-on-accent:#ffffff;   /* 强调文字色底上的文字（削顶徽标） */
+  --ap-danger-bg:rgba(178,58,0,.08);
+  --ap-switch-knob:#ffffff; /* 开关关闭时的滑钮 */
+  --ap-knob-hi:#ffffff;     /* 实体按键底部高光 */
+  --ap-press:rgba(0,0,0,.2);/* 实体控件（按键、滑钮）的下沿阴影 */
+  --ap-chevron:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23141414' stroke-width='1.75'/%3E%3C/svg%3E");
+  /* 颜色 · 表单 */
+  --ap-field:#ffffff;
+  --ap-field-line:#8a8a83;
+  /* 颜色 · 仿真屏 */
+  --ap-screen:#0c0c0c;
+  --ap-screen-bezel:#262626;
+  --ap-screen-ink:#eef3ff;
+  --ap-screen-dim:#3a3a3a;
+
+  /* 字体 · 仅系统字体 */
+  --ap-sans:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",Roboto,system-ui,sans-serif;
+  --ap-mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,"PingFang SC",monospace;
+
+  /* 间距 · 4 px 基准 */
+  --ap-s1:4px;--ap-s2:8px;--ap-s3:12px;--ap-s4:16px;--ap-s5:20px;--ap-s6:24px;--ap-s7:32px;--ap-s8:48px;
+  --ap-pad:clamp(18px,3vw,30px); /* 面板内边距 */
+
+  /* 圆角 */
+  --ap-r-board:18px;  /* 面板外框 */
+  --ap-r-ctl:10px;    /* 输入框、列表悬停、仿真屏 */
+  --ap-r-s:4px;       /* 横幅 */
+  --ap-r-seg:2px;     /* 电平段、信号格 */
+  --ap-r-pill:999px;  /* 按钮、分段、徽标、开关 */
+
+  /* 动效 */
+  --ap-t-fast:.15s;   /* 悬停、颜色 */
+  --ap-t:.2s;         /* 状态切换 */
+  --ap-t-fill:.6s;    /* 数值填充 */
+  --ap-t-press:80ms;  /* 实体按键按下 */
+  --ap-ease:cubic-bezier(.2,.7,.2,1);
+
+  /* 尺寸 */
+  --ap-max:1080px;
+  --ap-touch:44px;
+
+  color-scheme:light;
+  font-family:var(--ap-sans);color:var(--ap-ink);background:var(--ap-bg);
+  font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;
+}
+
+/* ---------- 2. 基础 ---------- */
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;min-height:100vh}
+h1,h2,h3,h4,p,dl,dt,dd,ul,ol,figure{margin:0}
+ul,ol{padding:0;list-style:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit}
+[hidden]{display:none!important}
+.ap-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:2px solid var(--ap-focus);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+
+/* ---------- 3. 文字 ---------- */
+.ap-title-2xl{font-size:clamp(36px,6vw,64px);font-weight:700;letter-spacing:-.04em;line-height:1.05}
+.ap-title-xl{font-size:clamp(30px,4.6vw,48px);font-weight:700;letter-spacing:-.03em;line-height:1.1}
+.ap-title-l{font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.01em;line-height:1.3;overflow-wrap:anywhere}
+.ap-title-m{font-size:clamp(20px,2.4vw,24px);font-weight:650;letter-spacing:-.02em;line-height:1.25}
+.ap-label{font-size:14px;font-weight:600;line-height:1.4}
+.ap-small{font-size:14px}
+.ap-caption{font-size:13px;color:var(--ap-muted)}
+.ap-meta{font:12px/1.4 var(--ap-mono);color:var(--ap-muted)}
+.ap-micro{font:11px/1.4 var(--ap-mono);color:var(--ap-muted)}
+.ap-muted{color:var(--ap-muted)}
+.ap-ink-2{color:var(--ap-ink-2)}
+.ap-mono{font-family:var(--ap-mono)}
+.ap-num{font-variant-numeric:tabular-nums}
+.ap-measure{max-width:60ch}
+.ap-code{font:14px var(--ap-mono);color:var(--ap-ink);border-bottom:1px solid var(--ap-ink)}
+.ap-url{font:14px var(--ap-mono);text-decoration:none;border-bottom:1px solid var(--ap-ink);overflow-wrap:anywhere;align-self:flex-start}
+.ap-url:hover{border-bottom-width:2px}
+
+/* ---------- 4. 间距工具 ---------- */
+.ap-mt-1{margin-top:4px}.ap-mt-2{margin-top:8px}.ap-mt-3{margin-top:12px}.ap-mt-4{margin-top:16px}
+.ap-mt-5{margin-top:20px}.ap-mt-6{margin-top:24px}.ap-mt-7{margin-top:32px}.ap-mt-8{margin-top:48px}
+.ap-pt-5{padding-top:20px}.ap-pt-6{padding-top:24px}.ap-pt-7{padding-top:32px}
+.ap-push{margin-top:auto}
+.ap-span-all{grid-column:1/-1}
+.ap-hide-empty:empty{display:none}
+.ap-stack{display:flex;flex-direction:column}
+.ap-between{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.ap-pair{display:flex;align-items:flex-end;justify-content:space-between;gap:12px 24px;flex-wrap:wrap}
+.ap-right{text-align:right}.ap-right .ap-readout{justify-content:flex-end}
+
+/* ---------- 5. 外框与顶栏 ---------- */
+.ap-wrap{max-width:var(--ap-max);margin:0 auto;padding:0 clamp(14px,4vw,40px)}
+.ap-main{padding-bottom:48px}
+.ap-top{display:flex;align-items:center;gap:12px 20px;flex-wrap:wrap;padding-top:20px;padding-bottom:20px}
+.ap-brand{display:flex;align-items:baseline;gap:8px;margin-right:auto;min-width:0}
+.ap-brand b{font-size:22px;font-weight:800;letter-spacing:-.03em}
+.ap-brand span{font:12px var(--ap-mono);color:var(--ap-muted);white-space:nowrap}
+.ap-actions{display:flex;align-items:center;gap:8px}
+.ap-actions .ap-lamp{margin-left:8px}
+@media (max-width:600px){
+  .ap-top{padding-top:16px;padding-bottom:16px}
+  .ap-top .ap-seg{order:3;width:100%}
+  .ap-top .ap-seg button{flex:1}
+}
+
+/* 分段导航 */
+.ap-seg{display:inline-flex;background:var(--ap-off);border-radius:var(--ap-r-pill);padding:3px}
+.ap-seg button{border:0;background:none;border-radius:var(--ap-r-pill);min-height:38px;padding:0 18px;font-size:14px;font-weight:600;color:var(--ap-ink-2);white-space:nowrap;transition:background var(--ap-t),color var(--ap-t)}
+.ap-seg button:hover{color:var(--ap-ink)}
+.ap-seg button[aria-pressed=true]{background:var(--ap-ink);color:var(--ap-on-ink)}
+
+/* 圆形图标按钮 */
+.ap-iconbtn{flex:none;width:var(--ap-touch);height:var(--ap-touch);border:0;border-radius:50%;background:var(--ap-off);color:var(--ap-ink);display:grid;place-items:center;transition:background var(--ap-t),color var(--ap-t)}
+.ap-iconbtn:hover{background:var(--ap-off-hover)}
+.ap-iconbtn[aria-pressed=true]{background:var(--ap-ink);color:var(--ap-on-ink)}
+.ap-iconbtn>.ap-icon{width:20px;height:20px}
+
+/* 界面图标：20 × 20 网格，见 ICONS.md */
+.ap-icon{display:block;flex:none;width:20px;height:20px;fill:currentColor}
+.ap-icon--16{width:16px;height:16px}
+.ap-icon--24{width:24px;height:24px}
+.ap-icon .ap-s,.ap-icon .ap-acc-s{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ap-icon .ap-acc{fill:var(--ap-accent)}
+.ap-icon .ap-acc-s{stroke:var(--ap-accent)}
+.ap-btn>.ap-icon{width:16px;height:16px}
+
+/* 状态灯 */
+.ap-lamp{display:inline-flex;align-items:center;gap:8px;font:12px var(--ap-mono);color:var(--ap-muted);white-space:nowrap}
+.ap-lamp::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--ap-accent)}
+.ap-lamp.is-on::before{background:var(--ap-ok);box-shadow:0 0 0 3px var(--ap-ok-glow)}
+.ap-lamp.is-live::before{background:var(--ap-accent);box-shadow:0 0 0 3px var(--ap-live-glow)}
+.ap-lamp.is-idle::before{background:var(--ap-faint)}
+
+/* 横幅 */
+.ap-banner{margin-bottom:12px;padding:12px 16px;background:var(--ap-panel);border-left:3px solid var(--ap-accent);border-radius:var(--ap-r-s);font-size:14px}
+
+/* ---------- 6. 面板 ---------- */
+.ap-board{display:flex;flex-wrap:wrap;gap:1px;background:var(--ap-line);border:1px solid var(--ap-line);border-radius:var(--ap-r-board);overflow:hidden}
+.ap-board+.ap-board{margin-top:16px}
+.ap-tile{--w:12;flex:1 1 calc(var(--w) / 12 * 100% - 1px);min-width:0;background:var(--ap-panel);padding:var(--ap-pad);display:flex;flex-direction:column}
+.ap-w3{--w:3}.ap-w4{--w:4}.ap-w5{--w:5}.ap-w6{--w:6}.ap-w7{--w:7}.ap-w8{--w:8}.ap-w9{--w:9}.ap-w12{--w:12}
+@media (max-width:780px){.ap-tile{--w:12}.ap-tile.ap-m6{--w:6}}
+@media (max-width:600px){.ap-board{border-radius:14px}}
+
+/* 面板头 */
+.ap-tag{display:flex;justify-content:space-between;align-items:baseline;gap:4px 12px;flex-wrap:wrap;font:12px/1.4 var(--ap-mono);color:var(--ap-muted)}
+.ap-tag--start{justify-content:flex-start}
+.ap-tag>h1,.ap-tag>h2,.ap-tag>h3,.ap-tag>strong{font:600 14px/1.4 var(--ap-sans);color:var(--ap-ink)}
+
+/* 分组标题（面板之间） */
+.ap-group{display:flex;justify-content:space-between;gap:4px 12px;flex-wrap:wrap;margin:32px 4px 12px;font:12px/1.4 var(--ap-mono);color:var(--ap-muted)}
+.ap-group>:first-child{font:600 14px/1.4 var(--ap-sans);color:var(--ap-ink)}
+
+/* 空状态 */
+.ap-empty{align-items:flex-start;gap:12px;padding-top:48px;padding-bottom:48px}
+
+/* 左右分栏 */
+.ap-split{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:24px 48px;align-items:start}
+@media (max-width:780px){.ap-split{grid-template-columns:1fr}}
+
+/* 面板底部操作区 */
+.ap-foot{display:flex;align-items:center;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;padding-top:24px;border-top:1px solid var(--ap-line)}
+
+/* ---------- 7. 读数 ---------- */
+.ap-readout{display:flex;align-items:flex-start;gap:4px;font-variant-numeric:tabular-nums}
+.ap-readout>strong{font-weight:250;letter-spacing:-.06em;line-height:.86;font-size:clamp(92px,17vw,184px)}
+.ap-readout>span{font-size:clamp(17px,2.2vw,24px);font-weight:500;color:var(--ap-muted);margin-top:.25em;white-space:nowrap}
+.ap-readout--l>strong{font-size:clamp(64px,9.5vw,104px);font-weight:300}
+.ap-readout--m{align-items:baseline}
+.ap-readout--m>strong{font-size:clamp(30px,4vw,42px);font-weight:400;letter-spacing:-.04em;line-height:1}
+.ap-readout--m>span{font-size:14px;margin:0}
+.ap-readout--mono>strong{font-family:var(--ap-mono);font-weight:400;letter-spacing:-.02em}
+
+/* 填充条 */
+.ap-bar{height:6px;background:var(--ap-off);border-radius:3px;overflow:hidden}
+.ap-bar>i{display:block;height:100%;width:0;background:var(--ap-ink);border-radius:3px;transition:width var(--ap-t-fill) var(--ap-ease)}
+.ap-scale{display:flex;justify-content:space-between;gap:8px;margin-top:6px;font:11px/1.4 var(--ap-mono);color:var(--ap-muted)}
+
+/* 分段电平表 */
+.ap-meter{display:grid;grid-template-columns:repeat(var(--n,25),minmax(0,1fr));gap:3px;height:16px}
+.ap-meter>i{background:var(--ap-off);border-radius:var(--ap-r-seg);transition:background var(--ap-t-fast)}
+.ap-meter>i.is-on{background:var(--ap-ink)}
+.ap-meter>i.is-hot.is-on{background:var(--ap-accent)}
+
+/* 曲线画布 */
+.ap-trace{display:block;width:100%;height:84px;border-bottom:1px solid var(--ap-line);
+  background:repeating-linear-gradient(to right,transparent 0 calc(16.666% - 1px),var(--ap-off) calc(16.666% - 1px) 16.666%)}
+
+/* 信号格 */
+.ap-signal{display:inline-flex;align-items:flex-end;gap:2px;height:13px}
+.ap-signal>i{width:3px;border-radius:1px;background:var(--ap-line)}
+.ap-signal>i:nth-child(1){height:5px}.ap-signal>i:nth-child(2){height:9px}.ap-signal>i:nth-child(3){height:13px}
+.ap-signal[data-level="1"]>i:nth-child(-n+1),.ap-signal[data-level="2"]>i:nth-child(-n+2),.ap-signal[data-level="3"]>i{background:var(--ap-ink)}
+
+/* 仿真屏 */
+.ap-screen{width:100%;max-width:440px;aspect-ratio:2/1;background:var(--ap-screen);border:5px solid var(--ap-screen-bezel);border-radius:var(--ap-r-ctl);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--ap-screen-ink);padding:12px}
+.ap-screen__text{font:500 clamp(17px,2.2vw,21px)/1.2 var(--ap-mono);letter-spacing:.04em;text-align:center}
+.ap-dots{display:flex;gap:6px}
+.ap-dots>i{width:5px;height:5px;border-radius:50%;background:var(--ap-screen-dim)}
+.ap-dots>i.is-on{background:var(--ap-screen-ink)}
+
+/* ---------- 8. 按钮 ---------- */
+.ap-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:var(--ap-touch);border:0;border-radius:var(--ap-r-pill);background:var(--ap-ink);color:var(--ap-on-ink);padding:0 28px;font-size:16px;font-weight:600;white-space:nowrap;align-self:flex-start;transition:background var(--ap-t-fast)}
+.ap-btn:hover:not(:disabled){background:var(--ap-ink-hover)}
+.ap-btn--quiet{background:var(--ap-off);color:var(--ap-ink)}
+.ap-btn--quiet:hover:not(:disabled){background:var(--ap-off-hover)}
+.ap-btn--danger{background:transparent;color:var(--ap-accent-ink);box-shadow:inset 0 0 0 1px currentColor}
+.ap-btn--danger:hover:not(:disabled){background:var(--ap-danger-bg)}
+.ap-btn--s{min-height:36px;padding:0 18px;font-size:14px}
+.ap-btn:disabled{opacity:.4;cursor:not-allowed}
+.ap-btn.is-busy{opacity:.6;cursor:wait}
+
+/* 文字按钮 */
+.ap-link{background:none;border:0;padding:6px 0;font-size:14px;font-weight:600;text-align:left;align-self:flex-start;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--ap-line)}
+.ap-link:hover{text-decoration-color:var(--ap-ink)}
+.ap-link:disabled{color:var(--ap-muted);cursor:wait}
+
+/* 实体按键 */
+.ap-knob{display:flex;align-items:center;gap:16px;background:none;border:0;padding:0;font-size:16px;font-weight:600;text-align:left;align-self:flex-start}
+.ap-knob::before{content:"";flex:none;width:52px;height:52px;border-radius:50%;background:var(--ap-accent);box-shadow:inset 0 -4px 0 var(--ap-press),0 1px 0 var(--ap-knob-hi);transition:transform var(--ap-t-press)}
+.ap-knob:active:not(:disabled)::before{transform:translateY(2px);box-shadow:inset 0 -1px 0 var(--ap-press)}
+.ap-knob:disabled{opacity:.4;cursor:not-allowed}
+
+/* 开关 */
+.ap-switch{position:relative;flex:none;width:48px;height:28px;border:0;padding:0;border-radius:var(--ap-r-pill);background:var(--ap-field-line);transition:background var(--ap-t)}
+.ap-switch::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--ap-switch-knob);transition:transform var(--ap-t) var(--ap-ease)}
+.ap-switch[aria-checked=true]{background:var(--ap-ink)}
+.ap-switch[aria-checked=true]::after{transform:translateX(20px);background:var(--ap-on-ink)}
+.ap-switch:disabled{opacity:.4;cursor:not-allowed}
+
+/* ---------- 9. 表单 ---------- */
+.ap-field{display:flex;flex-direction:column;gap:6px;max-width:420px}
+.ap-field>label{font-size:13px;font-weight:600}
+.ap-hint{font-size:13px;color:var(--ap-muted)}
+.ap-input,.ap-select{width:100%;min-height:var(--ap-touch);padding:10px 14px;border:1px solid var(--ap-field-line);border-radius:var(--ap-r-ctl);background:var(--ap-field);transition:border-color var(--ap-t-fast)}
+.ap-input:focus,.ap-select:focus{border-color:var(--ap-ink)}
+.ap-select{appearance:none;-webkit-appearance:none;padding-right:40px;cursor:pointer;
+  background:var(--ap-field) var(--ap-chevron) no-repeat right 14px center}
+.ap-input:disabled,.ap-select:disabled{color:var(--ap-faint);cursor:not-allowed}
+.ap-field.is-invalid .ap-input{border-color:var(--ap-accent-ink)}
+.ap-field.is-invalid .ap-hint{color:var(--ap-accent-ink)}
+
+/* 状态文字 */
+.ap-status{font-size:14px;min-height:1.5em}
+.ap-status.is-error{color:var(--ap-accent-ink)}
+
+/* ---------- 10. 列表与信息 ---------- */
+.ap-list>li+li{border-top:1px solid var(--ap-off)}
+.ap-item{width:calc(100% + 24px);margin:0 -12px;min-height:52px;padding:12px;background:transparent;border:0;border-radius:var(--ap-r-ctl);display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;transition:background var(--ap-t-fast)}
+.ap-item:hover:not(:disabled),.ap-item:focus-visible{background:var(--ap-panel-hover)}
+.ap-item:disabled{color:var(--ap-faint);cursor:default}
+.ap-item:disabled .ap-signal>i{background:var(--ap-off)}
+.ap-item>strong{font-weight:600;overflow-wrap:anywhere;min-width:0}
+.ap-item__meta{display:inline-flex;align-items:center;gap:12px;flex:none}
+.ap-item__meta>small{font:12px var(--ap-mono);color:var(--ap-muted);white-space:nowrap}
+
+/* 设置行 */
+.ap-setting{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0}
+.ap-setting+.ap-setting{border-top:1px solid var(--ap-off)}
+.ap-setting__text{min-width:0}
+.ap-setting__text>strong{display:block;font-weight:600}
+.ap-setting__text>span{display:block;font-size:13px;color:var(--ap-muted);margin-top:2px}
+
+/* 键值表 */
+.ap-kv{border-top:1px solid var(--ap-line)}
+.ap-kv>div{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--ap-off);font-size:14px}
+.ap-kv dt{flex:none}
+.ap-kv dd{font-family:var(--ap-mono);color:var(--ap-muted);text-align:right;overflow-wrap:anywhere;min-width:0}
+
+/* 徽标 */
+.ap-badge{display:inline-flex;align-items:center;height:20px;padding:0 8px;border:1px solid var(--ap-line);border-radius:var(--ap-r-pill);font:11px/1 var(--ap-mono);color:var(--ap-muted);white-space:nowrap}
+.ap-badge--ink{background:var(--ap-ink);border-color:var(--ap-ink);color:var(--ap-on-ink)}
+.ap-badge--alert{background:var(--ap-accent-ink);border-color:var(--ap-accent-ink);color:var(--ap-on-accent)}
+.ap-badge--demo{border-color:var(--ap-accent-ink);color:var(--ap-accent-ink)}
+
+/* 工具卡 */
+.ap-tool{border:0;border-radius:0;font:inherit;color:inherit;text-align:left;gap:6px;min-height:220px;transition:background var(--ap-t-fast)}
+.ap-tool:hover,.ap-tool:focus-visible{background:var(--ap-panel-hover)}
+.ap-tool:focus-visible{outline-offset:-4px}
+.ap-tool__phase{display:flex;justify-content:space-between;font:11px/1.4 var(--ap-mono);color:var(--ap-muted)}
+.ap-tool__phase i{font-style:normal;transition:transform var(--ap-t)}
+.ap-tool:hover .ap-tool__phase i{transform:translateX(3px)}
+.ap-tool__glyph{display:block;width:132px;height:40px;margin:20px 0 auto;fill:none;stroke:var(--ap-ink);stroke-width:1.75;stroke-linejoin:round;stroke-linecap:round}
+.ap-tool__glyph .f{fill:var(--ap-ink);stroke:none}
+.ap-tool__glyph .o{fill:var(--ap-accent);stroke:none}
+.ap-tool__glyph .os{stroke:var(--ap-accent);stroke-width:2}
+.ap-tool__glyph .h{stroke-width:1.2;opacity:.35}
+.ap-tool__name{font-size:clamp(20px,2.4vw,24px);font-weight:650;letter-spacing:-.02em;line-height:1.25;margin-top:16px}
+.ap-tool__spec{font:12px/1.4 var(--ap-mono);color:var(--ap-muted)}
+.ap-tool__desc{font-size:14px;color:var(--ap-ink-2);max-width:44ch}
+.ap-tool--compact{min-height:200px}
+.ap-tool--compact .ap-tool__glyph{margin-top:16px}
+@media (max-width:780px){.ap-tool{min-height:0}.ap-tool--compact{min-height:120px}.ap-tool--compact .ap-tool__desc{display:none}}
+
+/* ---------- 11. 数据与调节（1.1 新增） ---------- */
+/* 小号与块状分段 */
+.ap-seg--s button{min-height:32px;padding:0 12px;font-size:13px}
+.ap-seg--block{display:flex;width:100%}
+.ap-seg--block button{flex:1;padding:0 6px}
+.ap-seg button:disabled{opacity:.4;cursor:not-allowed}
+
+/* 控件组 */
+.ap-controls{display:flex;flex-direction:column;gap:22px}
+.ap-ctl>.ap-label{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
+.ap-ctl>.ap-label>.ap-meta{font-weight:400}
+.ap-btnrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.ap-btnrow>.ap-btn{align-self:auto}
+
+/* 带单位输入 */
+.ap-affix{display:flex;align-items:stretch;max-width:420px;border:1px solid var(--ap-field-line);border-radius:var(--ap-r-ctl);background:var(--ap-field);transition:border-color var(--ap-t-fast)}
+.ap-affix:focus-within{border-color:var(--ap-ink)}
+.ap-affix>input{flex:1;min-width:0;min-height:42px;border:0;background:none;padding:0 14px;font-family:var(--ap-mono);font-variant-numeric:tabular-nums;outline:none;-moz-appearance:textfield;appearance:textfield}
+.ap-affix>input::-webkit-inner-spin-button,.ap-affix>input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.ap-affix>span,.ap-affix>select{flex:none;display:flex;align-items:center;padding:0 14px;border:0;border-left:1px solid var(--ap-off);background:none;font-size:14px;color:var(--ap-muted)}
+.ap-affix>select{appearance:none;-webkit-appearance:none;cursor:pointer;color:var(--ap-ink);font-weight:600;padding-right:34px;background:var(--ap-chevron) no-repeat right 12px center}
+.ap-affix>input:disabled,.ap-affix>select:disabled{color:var(--ap-faint);cursor:not-allowed}
+.ap-affix:focus-within:has(:focus-visible){outline:2px solid var(--ap-accent);outline-offset:3px}
+.ap-affix.is-invalid{border-color:var(--ap-accent-ink)}
+.ap-affix--s{max-width:180px}
+.ap-hint.is-error{color:var(--ap-accent-ink)}
+
+/* 滑块：轨道是墨色填充，滑钮是实体控件，用强调色 */
+.ap-range{--p:50%;-webkit-appearance:none;appearance:none;display:block;width:100%;height:28px;margin:0;background:none;cursor:pointer}
+.ap-range::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:linear-gradient(to right,var(--ap-ink) 0 var(--p),var(--ap-off) var(--p) 100%)}
+.ap-range::-moz-range-track{height:6px;border-radius:3px;background:var(--ap-off)}
+.ap-range::-moz-range-progress{height:6px;border-radius:3px;background:var(--ap-ink)}
+.ap-range::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;margin-top:-8px;border:0;border-radius:50%;background:var(--ap-accent);box-shadow:inset 0 -3px 0 var(--ap-press)}
+.ap-range::-moz-range-thumb{width:22px;height:22px;border:0;border-radius:50%;background:var(--ap-accent);box-shadow:inset 0 -3px 0 var(--ap-press)}
+.ap-range:disabled{opacity:.4;cursor:not-allowed}
+
+/* 数据表 */
+.ap-table-wrap{overflow-x:auto;margin:0 -10px;-webkit-overflow-scrolling:touch}
+.ap-table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+.ap-table th{padding:8px 10px;border-bottom:1px solid var(--ap-line);font:12px/1.4 var(--ap-mono);font-weight:400;color:var(--ap-muted);text-align:left;white-space:nowrap}
+.ap-table td{padding:12px 10px;border-bottom:1px solid var(--ap-off);vertical-align:middle}
+.ap-table .num{text-align:right;font-family:var(--ap-mono);white-space:nowrap}
+.ap-table .mono{font-family:var(--ap-mono);font-size:13px;color:var(--ap-ink-2);white-space:nowrap}
+.ap-table .dim{color:var(--ap-muted)}
+.ap-table tbody tr{transition:background var(--ap-t-fast)}
+.ap-table tbody tr:hover{background:var(--ap-panel-hover)}
+.ap-table tr.is-selected{background:var(--ap-panel-hover)}
+.ap-table tr.is-selected>td:first-child{box-shadow:inset 3px 0 0 var(--ap-accent)}
+.ap-cellbtn{display:inline;background:none;border:0;padding:0;font-weight:600;text-align:left;overflow-wrap:anywhere}
+.ap-cellbtn .ap-badge{margin-left:6px;vertical-align:1px}
+
+/* 图表画布 */
+.ap-chart{display:block;width:100%;height:240px}
+.ap-chart--tall{height:clamp(220px,38vw,340px)}
+.ap-chart--short{height:120px}
+
+/* 测量值网格 */
+.ap-measures{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px 16px}
+.ap-measures .ap-readout--m>strong{font-size:clamp(26px,3.4vw,36px)}
+@media (max-width:480px){.ap-measures{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* ---------- 13. 筛选与原始数据（1.2 新增） ---------- */
+.ap-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px}
+.ap-toolbar>.ap-input{flex:1 1 220px;max-width:360px}
+.ap-input--s{min-height:38px;padding:6px 12px;font-size:14px}
+.ap-input[type=search]{-webkit-appearance:none;appearance:none}
+.ap-input[type=search]::-webkit-search-decoration{-webkit-appearance:none}
+.ap-check{display:inline-flex;align-items:center;gap:10px;font-size:14px;font-weight:600}
+.ap-hex{font:12px/1.8 var(--ap-mono);color:var(--ap-ink-2);overflow-wrap:anywhere;padding:10px 14px;background:var(--ap-bg);border-radius:var(--ap-r-ctl)}
+.ap-hex>b{font-weight:400;color:var(--ap-muted)}
+.ap-table .mono.wrap,.ap-table .wrap{white-space:normal;overflow-wrap:anywhere;min-width:200px}
+
+/* ---------- 12. 深色主题（1.1 新增） ----------
+   <html data-theme="dark"> 强制深色；data-theme="light" 强制浅色；
+   不设置时跟随系统。组件不需要任何修改。 */
+:root[data-theme=dark]{--ap-bg:#0e0e0d;--ap-panel:#181817;--ap-panel-hover:#21211f;--ap-line:#33332f;--ap-off:#2a2a27;--ap-off-hover:#363632;--ap-ink:#edede9;--ap-readout:#dadad4;--ap-readout-w:300;--ap-ink-2:#c4c4bd;--ap-muted:#96968e;--ap-faint:#5e5e58;--ap-accent:#ff5a1a;--ap-focus:#ff5a1a;--ap-accent-ink:#ff8550;--ap-ok:#34c45e;--ap-ok-glow:rgba(52,196,94,.25);--ap-live-glow:rgba(255,90,26,.28);--ap-on-ink:#141414;--ap-ink-hover:#ffffff;--ap-on-accent:#141414;--ap-danger-bg:rgba(255,133,80,.12);--ap-switch-knob:#d6d6d0;--ap-knob-hi:rgba(255,255,255,.06);--ap-press:rgba(0,0,0,.45);--ap-field:#111110;--ap-field-line:#76766f;--ap-screen:#000000;--ap-screen-bezel:#34342f;--ap-screen-ink:#eef3ff;--ap-screen-dim:#3a3a3a;--ap-chevron:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23ededE9' stroke-width='1.75'/%3E%3C/svg%3E");color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme]){--ap-bg:#0e0e0d;--ap-panel:#181817;--ap-panel-hover:#21211f;--ap-line:#33332f;--ap-off:#2a2a27;--ap-off-hover:#363632;--ap-ink:#edede9;--ap-readout:#dadad4;--ap-readout-w:300;--ap-ink-2:#c4c4bd;--ap-muted:#96968e;--ap-faint:#5e5e58;--ap-accent:#ff5a1a;--ap-focus:#ff5a1a;--ap-accent-ink:#ff8550;--ap-ok:#34c45e;--ap-ok-glow:rgba(52,196,94,.25);--ap-live-glow:rgba(255,90,26,.28);--ap-on-ink:#141414;--ap-ink-hover:#ffffff;--ap-on-accent:#141414;--ap-danger-bg:rgba(255,133,80,.12);--ap-switch-knob:#d6d6d0;--ap-knob-hi:rgba(255,255,255,.06);--ap-press:rgba(0,0,0,.45);--ap-field:#111110;--ap-field-line:#76766f;--ap-screen:#000000;--ap-screen-bezel:#34342f;--ap-screen-ink:#eef3ff;--ap-screen-dim:#3a3a3a;--ap-chevron:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23ededE9' stroke-width='1.75'/%3E%3C/svg%3E");color-scheme:dark}}
+
+/* 组件库展示页专用，不属于 aphelion.css */
+.kit-icons{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:1px;background:var(--ap-line);border:1px solid var(--ap-line);border-radius:var(--ap-r-ctl);overflow:hidden}
+.kit-icons>div{background:var(--ap-panel);padding:14px 10px 10px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;min-width:0}
+.kit-icons .ap-icon{width:24px;height:24px}
+.kit-icons b{font-size:12px;font-weight:600}.kit-icons span{font:10px/1.3 var(--ap-mono);color:var(--ap-muted);overflow-wrap:anywhere}
+.kit-big{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end}
+.kit-big figure{display:flex;flex-direction:column;gap:8px;align-items:center;font:11px var(--ap-mono);color:var(--ap-muted)}
+.kit-grid20{width:160px;height:160px;background:
+ linear-gradient(var(--ap-off) 1px,transparent 1px) 0 0/8px 8px,
+ linear-gradient(90deg,var(--ap-off) 1px,transparent 1px) 0 0/8px 8px;border:1px solid var(--ap-line);position:relative;color:var(--ap-ink)}
+.kit-grid20 .ap-icon{width:160px;height:160px;position:absolute;inset:0}
+.kit-grid20 .kit-kl{position:absolute;inset:0;width:160px;height:160px}
+.kit-kl *{fill:none;stroke:var(--ap-accent-ink);stroke-width:.12;stroke-dasharray:.4 .4}
+.kit-states{display:flex;flex-wrap:wrap;gap:12px}
+.kit-states>div{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--ap-r-ctl);font-size:13px;background:var(--ap-bg)}
+.kit-glyphs{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:24px 32px}
+.kit-glyphs figure{display:flex;flex-direction:column;gap:6px}
+.kit-glyphs .ap-tool__glyph{margin:0 0 6px}
+.kit-glyphs b{font-size:14px}.kit-glyphs span{font-size:13px;color:var(--ap-muted)}
+.kit-bad .ap-icon .kit-thin{fill:none;stroke:currentColor;stroke-width:1}
+
+.kit-cls{font:11px/1.4 var(--ap-mono);color:var(--ap-muted);background:var(--ap-bg);padding:2px 6px;border-radius:4px;white-space:nowrap}
+.kit-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px}
+.kit-sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1px;background:var(--ap-line);border:1px solid var(--ap-line);border-radius:var(--ap-r-ctl);overflow:hidden}
+.kit-sw>div{background:var(--ap-panel);padding:12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kit-sw i{display:block;height:44px;border-radius:6px;margin-bottom:8px;box-shadow:inset 0 0 0 1px var(--ap-line)}
+.kit-sw b{font-size:13px}.kit-sw span{font:11px/1.4 var(--ap-mono);color:var(--ap-muted);overflow-wrap:anywhere}
+.kit-type>div{display:grid;grid-template-columns:150px minmax(0,1fr);gap:4px 16px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--ap-off)}
+.kit-type>div:first-child{border-top:1px solid var(--ap-line)}
+@media(max-width:600px){.kit-type>div{grid-template-columns:1fr}}
+.kit-type .ap-readout>strong{font-size:clamp(56px,10vw,120px)}
+.kit-space{display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px}
+.kit-space div{display:flex;flex-direction:column;align-items:flex-start;gap:6px;font:11px var(--ap-mono);color:var(--ap-muted)}
+.kit-space i{display:block;background:var(--ap-ink);height:16px}
+.kit-rad{display:flex;flex-wrap:wrap;gap:16px}
+.kit-rad div{display:flex;flex-direction:column;gap:6px;font:11px var(--ap-mono);color:var(--ap-muted)}
+.kit-rad i{display:block;width:72px;height:48px;border:1px solid var(--ap-ink);background:var(--ap-off)}
+.kit-grid .ap-tile{padding:14px;min-height:56px;justify-content:center;font:12px var(--ap-mono);color:var(--ap-muted)}
+.kit-grid{border-radius:var(--ap-r-ctl)}
+.kit-do{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:600px){.kit-do{grid-template-columns:1fr}}
+.kit-do>div{border-top:2px solid var(--ap-ink);padding-top:10px}
+.kit-do>div.no{border-color:var(--ap-accent-ink)}
+.kit-do b{font-size:13px}.kit-do ul{margin-top:6px;font-size:14px;color:var(--ap-ink-2)}.kit-do li{padding:3px 0}
+.kit-toc{display:flex;flex-wrap:wrap;gap:8px}
+.kit-toc a{text-decoration:none}
+
+/* ---------- Aphelion UI 1.4 补充样式 ---------- */
+.ap-brand b{font-weight:700;letter-spacing:-.01em}
+.ap-readout{font-variant-numeric:tabular-nums slashed-zero}
+.ap-readout>strong{color:var(--ap-readout);font-weight:var(--ap-readout-w);min-width:2ch}
+.ap-readout--mono>strong{font-variant-numeric:tabular-nums}
+.ap-lamp::before{background:transparent;border:1.5px solid var(--ap-ink);box-sizing:border-box}
+.ap-lamp.is-on::before{border:0;background:var(--ap-ok);box-shadow:0 0 0 3px var(--ap-ok-glow)}
+.ap-lamp.is-live::before{border:0;background:var(--ap-accent);box-shadow:0 0 0 3px var(--ap-live-glow)}
+.ap-lamp.is-idle::before{border:0;background:var(--ap-faint);box-shadow:none}
+.ap-mark--corner{position:relative}
+.ap-mark--corner::before,.ap-mark--corner::after{content:"";position:absolute;width:6px;height:6px;pointer-events:none;border-color:var(--ap-line);border-style:solid}
+.ap-mark--corner::before{top:8px;left:8px;border-width:1px 0 0 1px}
+.ap-mark--corner::after{bottom:8px;right:8px;border-width:0 1px 1px 0}
+.ap-mark--ruler{height:6px;margin-top:8px;border-bottom:1px solid var(--ap-off);background:repeating-linear-gradient(to right,var(--ap-off) 0 1px,transparent 1px 8px) left bottom/100% 3px no-repeat,repeating-linear-gradient(to right,var(--ap-line) 0 1px,transparent 1px 40px) left bottom/100% 6px no-repeat}
+.ap-mark--index{font:11px var(--ap-mono);color:var(--ap-muted);margin-right:8px}
+.ap-spark{display:inline-block;vertical-align:middle;height:24px;width:72px}
+.ap-qr{display:inline-flex;flex-direction:column;align-items:center;gap:8px}
+.ap-qr__box{background:#ffffff;padding:12px;border:1px solid var(--ap-line);border-radius:var(--ap-r-ctl);line-height:0}
+
+</style></head>
+<body>
+<header class="ap-wrap ap-top"><div class="ap-brand"><b>Aphelion UI</b><span>组件库 1.3</span></div><nav class="ap-seg ap-seg--s" id="kit-theme" aria-label="主题"><button type="button" data-v="auto" aria-pressed="true">跟随系统</button><button type="button" data-v="light" aria-pressed="false">浅色</button><button type="button" data-v="dark" aria-pressed="false">深色</button></nav><span class="ap-lamp is-on">aphelion.css · 26 KB</span></header>
+<main class="ap-wrap ap-main">
+<div class="ap-board"><article class="ap-tile"><div class="ap-tag"><span>仪器面板设计语言</span><span>ESP32‑S3 · 离线 · 单文件</span></div>
+<h1 class="ap-title-xl ap-mt-6">读数第一，一种强调色，一根 1 px 的线。</h1>
+<p class="ap-measure ap-muted ap-mt-3">Aphelion 的控制台像一块硬件前面板：浅灰机身、墨色读数，只用橙色标出能按的东西和正在变化的数据。下面每个组件都用 aphelion.css 原样渲染，类名写在右上角。</p>
+<div class="kit-toc ap-mt-5"><a class="ap-badge" href="#g-令牌">令牌</a><a class="ap-badge" href="#g-图标">图标</a><a class="ap-badge" href="#g-布局">布局</a><a class="ap-badge" href="#g-读数与信号">读数与信号</a><a class="ap-badge" href="#g-控件">控件</a><a class="ap-badge" href="#g-表单">表单</a><a class="ap-badge" href="#g-列表与信息">列表与信息</a><a class="ap-badge" href="#g-数据与调节">数据与调节</a></div></article></div>
+<div class="ap-group" id="g-令牌"><span>令牌</span><span>颜色 · 文字 · 间距 · 圆角</span></div><div class="ap-board"><article class="ap-tile"><div class="ap-tag"><h3>颜色</h3><span class="kit-cls">--ap-*</span></div><div class="ap-mt-5"><div class="kit-sw"><div><i style="background: var(--ap-bg);"></i><b>机身</b><span>--ap-bg</span><span>#E2E2DE · 页面底色</span></div><div><i style="background: var(--ap-panel);"></i><b>面板</b><span>--ap-panel</span><span>#F2F2EF · 内容承载面</span></div><div><i style="background: var(--ap-panel-hover);"></i><b>面板悬停</b><span>--ap-panel-hover</span><span>#E9E9E5 · 列表、卡片悬停</span></div><div><i style="background: var(--ap-line);"></i><b>结构线</b><span>--ap-line</span><span>#CBCBC5 · 面板分隔、外框</span></div><div><i style="background: var(--ap-off);"></i><b>未点亮</b><span>--ap-off</span><span>#D9D9D3 · 轨道、空段、细线</span></div><div><i style="background: var(--ap-ink);"></i><b>墨</b><span>--ap-ink</span><span>#141414 · 文字、读数、主按钮</span></div><div><i style="background: var(--ap-ink-2);"></i><b>次墨</b><span>--ap-ink-2</span><span>#3D3D39 · 次级正文</span></div><div><i style="background: var(--ap-muted);"></i><b>说明</b><span>--ap-muted</span><span>#62625C · 标签、单位</span></div><div><i style="background: var(--ap-faint);"></i><b>禁用</b><span>--ap-faint</span><span>#9A9A94 · 仅禁用</span></div><div><i style="background: var(--ap-accent);"></i><b>强调</b><span>--ap-accent</span><span>#FF5000 · 按键、最新点、削峰、焦点</span></div><div><i style="background: var(--ap-accent-ink);"></i><b>强调文字</b><span>--ap-accent-ink</span><span>#B23A00 · 错误、演示标记</span></div><div><i style="background: var(--ap-ok);"></i><b>在线</b><span>--ap-ok</span><span>#1FAA4A · 仅在线状态灯</span></div><div><i style="background: var(--ap-field);"></i><b>输入框</b><span>--ap-field</span><span>#FFFFFF · 输入框底色</span></div><div><i style="background: var(--ap-field-line);"></i><b>输入框线</b><span>--ap-field-line</span><span>#8A8A83 · 输入框边、开关轨道</span></div><div><i style="background: var(--ap-screen);"></i><b>屏幕</b><span>--ap-screen</span><span>#0C0C0C · 仿真屏底</span></div><div><i style="background: var(--ap-screen-ink);"></i><b>屏幕字</b><span>--ap-screen-ink</span><span>#EEF3FF · 仿真屏文字</span></div></div><p class="ap-caption ap-mt-3">两种颜色加中性色：墨 #141414 与强调橙 #FF5000。绿色只用于在线状态灯，不作为第三种强调色。</p></div></article><article class="ap-tile"><div class="ap-tag"><h3>深色主题</h3><span class="kit-cls">[data-theme=dark]</span></div><div class="ap-mt-5"><div class="kit-sw"><div><i style="background: rgb(14, 14, 13);"></i><b>机身</b><span>#0E0E0D</span></div><div><i style="background: rgb(24, 24, 23);"></i><b>面板</b><span>#181817</span></div><div><i style="background: rgb(51, 51, 47);"></i><b>结构线</b><span>#33332F</span></div><div><i style="background: rgb(42, 42, 39);"></i><b>未点亮</b><span>#2A2A27</span></div><div><i style="background: rgb(237, 237, 233);"></i><b>墨</b><span>#EDEDE9</span></div><div><i style="background: rgb(196, 196, 189);"></i><b>次墨</b><span>#C4C4BD</span></div><div><i style="background: rgb(150, 150, 142);"></i><b>说明</b><span>#96968E</span></div><div><i style="background: rgb(255, 90, 26);"></i><b>强调</b><span>#FF5A1A</span></div><div><i style="background: rgb(255, 133, 80);"></i><b>强调文字</b><span>#FF8550</span></div><div><i style="background: rgb(52, 196, 94);"></i><b>在线</b><span>#34C45E</span></div></div><p class="ap-caption ap-mt-3">同一组令牌名，换一组值。组件代码不变。深色下强调色略微提亮（#FF5A1A），强调文字改为 #FF8550，保证在深色面板上的对比度。右上角可以切换主题，看整页组件的效果。</p></div></article><article class="ap-tile"><div class="ap-tag"><h3>文字层级</h3><span class="kit-cls">系统字体 · 等宽数字</span></div><div class="ap-mt-5"><div class="kit-type"><div><span class="ap-meta">读数 XL<br><span class="kit-cls">.ap-readout</span></span><div class="ap-readout"><strong>24.6</strong><span>°C</span></div></div><div><span class="ap-meta">读数 L<br><span class="kit-cls">.ap-readout--l</span></span><div class="ap-readout ap-readout--l"><strong>52.3</strong><span>%RH</span></div></div><div><span class="ap-meta">读数 M<br><span class="kit-cls">.ap-readout--m</span></span><div class="ap-readout ap-readout--m"><strong>−46.0</strong><span>dBFS</span></div></div><div><span class="ap-meta">标题 2XL · 64<br><span class="kit-cls">.ap-title-2xl</span></span><p class="ap-title-2xl">数字示波器</p></div><div><span class="ap-meta">标题 XL · 48<br><span class="kit-cls">.ap-title-xl</span></span><p class="ap-title-xl">系统设置</p></div><div><span class="ap-meta">标题 L · 28<br><span class="kit-cls">.ap-title-l</span></span><p class="ap-title-l">已接入局域网 · Studio‑2.4G</p></div><div><span class="ap-meta">标题 M · 24<br><span class="kit-cls">.ap-title-m</span></span><p class="ap-title-m">PWM 发生器</p></div><div><span class="ap-meta">标签 · 14/600<br><span class="kit-cls">.ap-label</span></span><p class="ap-label">相对湿度</p></div><div><span class="ap-meta">正文 · 16<br><span class="kit-cls">body</span></span><p>手机或电脑连上设备热点，打开控制台即可使用。</p></div><div><span class="ap-meta">小字 · 14<br><span class="kit-cls">.ap-small</span></span><p class="ap-small">已提交，请查看左侧路由器状态。</p></div><div><span class="ap-meta">说明 · 13<br><span class="kit-cls">.ap-caption</span></span><p class="ap-caption">估算声压级</p></div><div><span class="ap-meta">元信息 · 12 等宽<br><span class="kit-cls">.ap-meta</span></span><p class="ap-meta">SHT40 · 读数正常</p></div><div><span class="ap-meta">微字 · 11 等宽<br><span class="kit-cls">.ap-micro</span></span><p class="ap-micro">首版 · 0 · 50 · 100</p></div></div></div></article><article class="ap-tile ap-w6"><div class="ap-tag"><h3>间距</h3><span class="kit-cls">--ap-s1 … s8</span></div><div class="ap-mt-5"><div class="kit-space"><div><i style="width: 4px;"></i>s1 · 4</div><div><i style="width: 8px;"></i>s2 · 8</div><div><i style="width: 12px;"></i>s3 · 12</div><div><i style="width: 16px;"></i>s4 · 16</div><div><i style="width: 20px;"></i>s5 · 20</div><div><i style="width: 24px;"></i>s6 · 24</div><div><i style="width: 32px;"></i>s7 · 32</div><div><i style="width: 48px;"></i>s8 · 48</div></div></div></article><article class="ap-tile ap-w6"><div class="ap-tag"><h3>圆角</h3><span class="kit-cls">--ap-r-*</span></div><div class="ap-mt-5"><div class="kit-rad"><div><i style="border-radius: 2px;"></i>seg · 2px</div><div><i style="border-radius: 4px;"></i>s · 4px</div><div><i style="border-radius: 10px;"></i>ctl · 10px</div><div><i style="border-radius: 18px;"></i>board · 18px</div><div><i style="border-radius: 999px;"></i>pill · 999px</div></div></div></article></div><div class="ap-group" id="g-图标"><span>图标</span><span>45 个界面图标 · 10 个工具图形 · 详见 ICONS.md</span></div><div class="ap-board"><article class="ap-tile"><div class="ap-tag"><h3>构造网格</h3><span class="kit-cls">viewBox 0 0 20 20</span></div><div class="ap-mt-5"><div class="kit-big"><figure><div class="kit-grid20"><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M3.28 9.28A9.5 9.5 0 0 1 16.72 9.28"></path><path class="ap-s" d="M5.76 11.76A6 6 0 0 1 14.24 11.76"></path><circle class="ap-acc" cx="10" cy="16" r="2"></circle></svg><svg class="kit-kl" viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="2" width="16" height="16"></rect><rect x="3" y="3" width="14" height="14"></rect><circle cx="10" cy="10" r="8"></circle><rect x="2" y="4" width="16" height="12"></rect><rect x="4" y="2" width="12" height="16"></rect></svg></div>wifi · 8×</figure><figure><div class="kit-grid20"><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect class="ap-s" x="2" y="3" width="16" height="14" rx="2"></rect><path class="ap-acc-s" d="M5 10c1.7-4.5 3.3-4.5 5 0s3.3 4.5 5 0"></path></svg><svg class="kit-kl" viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="2" width="16" height="16"></rect><rect x="3" y="3" width="14" height="14"></rect><circle cx="10" cy="10" r="8"></circle><rect x="2" y="4" width="16" height="12"></rect><rect x="4" y="2" width="12" height="16"></rect></svg></div>scope · 8×</figure><figure><div class="kit-grid20"><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect x="5" y="5" width="10" height="10" rx="1.5"></rect><path class="ap-s" d="M8 3v1.5M12 3v1.5M8 15.5V17M12 15.5V17M3 8h1.5M3 12h1.5M15.5 8H17M15.5 12H17"></path><circle class="ap-acc" cx="8" cy="8" r="1.2"></circle></svg><svg class="kit-kl" viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="2" width="16" height="16"></rect><rect x="3" y="3" width="14" height="14"></rect><circle cx="10" cy="10" r="8"></circle><rect x="2" y="4" width="16" height="12"></rect><rect x="4" y="2" width="12" height="16"></rect></svg></div>chip · 8×</figure></div>
+<p class="ap-caption ap-mt-4">20 × 20 网格，每格 1 px。虚线是关键线：2 px 安全边距内的 16 × 16 区域、14 × 14 方形、直径 16 的圆、16 × 12 横向矩形和 12 × 16 纵向矩形。线条 2 px，圆头圆角。</p></div></article><article class="ap-tile ap-w6"><div class="ap-tag"><h3>尺寸</h3><span class="kit-cls">.ap-icon .ap-icon--16 .ap-icon--24</span></div><div class="ap-mt-5"><div class="kit-big"><figure><svg class="ap-icon ap-icon--16" viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="4" width="16" height="2" rx="1"></rect><rect x="2" y="9" width="16" height="2" rx="1"></rect><rect x="2" y="14" width="16" height="2" rx="1"></rect><circle cx="13" cy="5" r="2.6"></circle><circle class="ap-acc" cx="7" cy="10" r="2.6"></circle><circle cx="12" cy="15" r="2.6"></circle></svg><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="4" width="16" height="2" rx="1"></rect><rect x="2" y="9" width="16" height="2" rx="1"></rect><rect x="2" y="14" width="16" height="2" rx="1"></rect><circle cx="13" cy="5" r="2.6"></circle><circle class="ap-acc" cx="7" cy="10" r="2.6"></circle><circle cx="12" cy="15" r="2.6"></circle></svg><svg class="ap-icon ap-icon--24" viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="4" width="16" height="2" rx="1"></rect><rect x="2" y="9" width="16" height="2" rx="1"></rect><rect x="2" y="14" width="16" height="2" rx="1"></rect><circle cx="13" cy="5" r="2.6"></circle><circle class="ap-acc" cx="7" cy="10" r="2.6"></circle><circle cx="12" cy="15" r="2.6"></circle></svg><span>settings</span></figure><figure><svg class="ap-icon ap-icon--16" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M5 6.5l7 6-3.5 3V4.5l3.5 3-7 6"></path><circle class="ap-acc" cx="16.5" cy="10" r="1.6"></circle></svg><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M5 6.5l7 6-3.5 3V4.5l3.5 3-7 6"></path><circle class="ap-acc" cx="16.5" cy="10" r="1.6"></circle></svg><svg class="ap-icon ap-icon--24" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M5 6.5l7 6-3.5 3V4.5l3.5 3-7 6"></path><circle class="ap-acc" cx="16.5" cy="10" r="1.6"></circle></svg><span>ble</span></figure><figure><svg class="ap-icon ap-icon--16" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M17 10A7 7 0 1 1 14.95 5.05L17 6.5"></path><path class="ap-s" d="M17 2.5v4h-4"></path></svg><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M17 10A7 7 0 1 1 14.95 5.05L17 6.5"></path><path class="ap-s" d="M17 2.5v4h-4"></path></svg><svg class="ap-icon ap-icon--24" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M17 10A7 7 0 1 1 14.95 5.05L17 6.5"></path><path class="ap-s" d="M17 2.5v4h-4"></path></svg><span>refresh</span></figure><figure><svg class="ap-icon ap-icon--16" viewBox="0 0 20 20" aria-hidden="true"><circle class="ap-s" cx="8.5" cy="8.5" r="5.5"></circle><path class="ap-s" d="M12.5 12.5L17 17"></path></svg><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><circle class="ap-s" cx="8.5" cy="8.5" r="5.5"></circle><path class="ap-s" d="M12.5 12.5L17 17"></path></svg><svg class="ap-icon ap-icon--24" viewBox="0 0 20 20" aria-hidden="true"><circle class="ap-s" cx="8.5" cy="8.5" r="5.5"></circle><path class="ap-s" d="M12.5 12.5L17 17"></path></svg><span>search</span></figure></div><p class="ap-caption ap-mt-4">只用 16、20、24 三种尺寸：16 用在按钮和行内，20 是默认尺寸（顶栏图标按钮），24 用在空状态和展示。不要缩放到其他尺寸。</p></div></article><article class="ap-tile ap-w6"><div class="ap-tag"><h3>颜色与状态</h3><span class="kit-cls">currentColor · .ap-acc</span></div><div class="ap-mt-5"><div class="kit-states"><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M17 10A7 7 0 1 1 14.95 5.05L17 6.5"></path><path class="ap-s" d="M17 2.5v4h-4"></path></svg>默认 · --ap-ink</div><div class="ap-muted"><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M17 10A7 7 0 1 1 14.95 5.05L17 6.5"></path><path class="ap-s" d="M17 2.5v4h-4"></path></svg>次要 · --ap-muted</div>
+<button class="ap-iconbtn" aria-pressed="true" aria-label="已选中示例"><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="4" width="16" height="2" rx="1"></rect><rect x="2" y="9" width="16" height="2" rx="1"></rect><rect x="2" y="14" width="16" height="2" rx="1"></rect><circle cx="13" cy="5" r="2.6"></circle><circle class="ap-acc" cx="7" cy="10" r="2.6"></circle><circle cx="12" cy="15" r="2.6"></circle></svg></button><button class="ap-iconbtn" aria-label="默认示例"><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="2" width="7" height="7" rx="1.6"></rect><rect x="11" y="2" width="7" height="7" rx="1.6"></rect><rect x="2" y="11" width="7" height="7" rx="1.6"></rect><rect class="ap-acc" x="11" y="11" width="7" height="7" rx="3.5"></rect></svg></button>
+<button class="ap-btn ap-btn--s"><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M17 10A7 7 0 1 1 14.95 5.05L17 6.5"></path><path class="ap-s" d="M17 2.5v4h-4"></path></svg>重新扫描</button><button class="ap-btn ap-btn--quiet ap-btn--s"><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M10 3v9.5"></path><path class="ap-s" d="M6 8.5l4 4 4-4"></path><path class="ap-s" d="M3.5 16.5h13"></path></svg>下载</button><button class="ap-btn ap-btn--s" disabled=""><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 3.5 16.5 10 6 16.5z"></path></svg>启动</button></div>
+<p class="ap-caption ap-mt-4">图标颜色继承文字颜色（currentColor），所以在墨色按钮、选中状态、禁用状态和深色主题里自动正确。强调元素始终是橙色。</p></div></article><article class="ap-tile"><div class="ap-tag"><h3>图标库</h3><span class="kit-cls">ap-i-*</span></div><div class="ap-mt-5"><p class="ap-label">入口 <span class="ap-meta">· 顶栏和全局入口，可以有一个强调元素 · 3 个</span></p><div class="kit-icons ap-mt-3"><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="2" width="7" height="7" rx="1.6"></rect><rect x="11" y="2" width="7" height="7" rx="1.6"></rect><rect x="2" y="11" width="7" height="7" rx="1.6"></rect><rect class="ap-acc" x="11" y="11" width="7" height="7" rx="3.5"></rect></svg><b>工具箱</b><span>ap-i-tools</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="4" width="16" height="2" rx="1"></rect><rect x="2" y="9" width="16" height="2" rx="1"></rect><rect x="2" y="14" width="16" height="2" rx="1"></rect><circle cx="13" cy="5" r="2.6"></circle><circle class="ap-acc" cx="7" cy="10" r="2.6"></circle><circle cx="12" cy="15" r="2.6"></circle></svg><b>系统设置</b><span>ap-i-settings</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M3.94 15.5A7 7 0 1 1 16.06 15.5"></path><path class="ap-acc-s" d="M10 12l3.5-4"></path><circle cx="10" cy="12" r="1.8"></circle></svg><b>传感器</b><span>ap-i-gauge</span></div></div><p class="ap-label ap-mt-6">工具 <span class="ap-meta">· 每个工具的小图标，可以有一个强调元素 · 10 个</span></p><div class="kit-icons ap-mt-3"><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M3.28 9.28A9.5 9.5 0 0 1 16.72 9.28"></path><path class="ap-s" d="M5.76 11.76A6 6 0 0 1 14.24 11.76"></path><circle class="ap-acc" cx="10" cy="16" r="2"></circle></svg><b>Wi‑Fi 分析</b><span>ap-i-wifi</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M5 6.5l7 6-3.5 3V4.5l3.5 3-7 6"></path><circle class="ap-acc" cx="16.5" cy="10" r="1.6"></circle></svg><b>BLE 扫描</b><span>ap-i-ble</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect class="ap-s" x="2" y="3" width="16" height="14" rx="2"></rect><path class="ap-acc-s" d="M5 10c1.7-4.5 3.3-4.5 5 0s3.3 4.5 5 0"></path></svg><b>数字示波器</b><span>ap-i-scope</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M2 15h3V5h5v10h5V5h3"></path><path class="ap-acc-s" d="M5 5h5"></path></svg><b>PWM 发生器</b><span>ap-i-pwm</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="4" cy="10" r="2.5"></circle><circle cx="16" cy="10" r="2.5"></circle><path class="ap-s" d="M7.5 10h5"></path><circle class="ap-acc" cx="10" cy="10" r="2.2"></circle></svg><b>网络诊断</b><span>ap-i-net</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M2 8h4V3.5h5V8h7"></path><path class="ap-s" d="M2 16.5h7V12h4v4.5h5"></path><rect class="ap-acc" x="15" y="1.5" width="1.5" height="17" rx="0.75"></rect></svg><b>逻辑分析</b><span>ap-i-logic</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect class="ap-s" x="2" y="3" width="16" height="14" rx="2"></rect><path class="ap-s" d="M6 8l2.5 2L6 12"></path><rect class="ap-acc" x="10" y="11" width="4" height="2" rx="0.5"></rect></svg><b>串口终端</b><span>ap-i-serial</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect x="5" y="2.5" width="4" height="4" rx="1"></rect><rect x="11" y="2.5" width="4" height="4" rx="1"></rect><rect x="5" y="8" width="4" height="4" rx="1"></rect><rect class="ap-acc" x="11" y="8" width="4" height="4" rx="1"></rect><rect x="5" y="13.5" width="4" height="4" rx="1"></rect><rect x="11" y="13.5" width="4" height="4" rx="1"></rect></svg><b>GPIO 控制</b><span>ap-i-gpio</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect class="ap-acc" x="3" y="3" width="2" height="14" rx="1"></rect><rect x="7" y="10" width="2" height="7" rx="1"></rect><rect x="11" y="12.5" width="2" height="4.5" rx="1"></rect><rect x="15" y="14" width="2" height="3" rx="1"></rect><path class="ap-s" d="M2 17h16"></path></svg><b>信号分析</b><span>ap-i-spectrum</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect x="5" y="5" width="10" height="10" rx="1.5"></rect><path class="ap-s" d="M8 3v1.5M12 3v1.5M8 15.5V17M12 15.5V17M3 8h1.5M3 12h1.5M15.5 8H17M15.5 12H17"></path><circle class="ap-acc" cx="8" cy="8" r="1.2"></circle></svg><b>系统工具</b><span>ap-i-chip</span></div></div><p class="ap-label ap-mt-6">对象 <span class="ap-meta">· 读数和设备对象，不带强调 · 9 个</span></p><div class="kit-icons ap-mt-3"><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M8 11.5V4.5a2 2 0 0 1 4 0v7"></path><circle cx="10" cy="14.5" r="3.5"></circle></svg><b>温度</b><span>ap-i-thermometer</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5C8 5 4.5 9.2 4.5 12.5a5.5 5.5 0 0 0 11 0C15.5 9.2 12 5 10 2.5z"></path></svg><b>湿度</b><span>ap-i-droplet</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7.5h3l4.5-4v13L6 12.5H3z"></path><path class="ap-s" d="M13.5 7.5a3.5 3.5 0 0 1 0 5"></path><path class="ap-s" d="M15.5 4.5a7.5 7.5 0 0 1 0 11"></path></svg><b>声音</b><span>ap-i-speaker</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect class="ap-s" x="2" y="5" width="16" height="10" rx="2"></rect><rect x="5" y="8" width="6" height="2" rx="1"></rect><rect x="5" y="11" width="3" height="1.5" rx="0.75"></rect><rect x="13" y="8" width="2" height="4" rx="1"></rect></svg><b>OLED 屏幕</b><span>ap-i-screen</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><circle class="ap-s" cx="10" cy="10" r="7"></circle><path class="ap-s" d="M10 6v4.5l3 2"></path></svg><b>时间</b><span>ap-i-clock</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><circle class="ap-s" cx="10" cy="10" r="7"></circle><path d="M10 3a7 7 0 0 1 0 14z"></path></svg><b>外观</b><span>ap-i-theme</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M5 2.5h6l4 4v11H5z"></path><path class="ap-s" d="M11 2.5v4h4"></path></svg><b>文件</b><span>ap-i-file</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect x="4" y="9" width="12" height="9" rx="2"></rect><path class="ap-s" d="M6.5 9V6.5a3.5 3.5 0 0 1 7 0V9"></path></svg><b>加密</b><span>ap-i-lock</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="8" r="2"></circle><path class="ap-s" d="M10 10v7.5"></path><path class="ap-s" d="M5.76 3.76a6 6 0 0 0 0 8.48"></path><path class="ap-s" d="M14.24 3.76a6 6 0 0 1 0 8.48"></path></svg><b>设备热点</b><span>ap-i-antenna</span></div></div><p class="ap-label ap-mt-6">操作 <span class="ap-meta">· 按钮里的动作，不带强调 · 17 个</span></p><div class="kit-icons ap-mt-3"><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 3.5 16.5 10 6 16.5z"></path></svg><b>开始</b><span>ap-i-play</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect x="4.5" y="4.5" width="11" height="11" rx="2"></rect></svg><b>停止</b><span>ap-i-stop</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect x="5" y="4" width="3.5" height="12" rx="1"></rect><rect x="11.5" y="4" width="3.5" height="12" rx="1"></rect></svg><b>暂停</b><span>ap-i-pause</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M17 10A7 7 0 1 1 14.95 5.05L17 6.5"></path><path class="ap-s" d="M17 2.5v4h-4"></path></svg><b>重新扫描</b><span>ap-i-refresh</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><circle class="ap-s" cx="8.5" cy="8.5" r="5.5"></circle><path class="ap-s" d="M12.5 12.5L17 17"></path></svg><b>筛选与查找</b><span>ap-i-search</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="4" width="16" height="2" rx="1"></rect><rect x="5" y="9" width="10" height="2" rx="1"></rect><rect x="8" y="14" width="4" height="2" rx="1"></rect></svg><b>过滤条件</b><span>ap-i-filter</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M6 3.5v13"></path><path class="ap-s" d="M3 13.5l3 3 3-3"></path><rect x="11" y="4" width="7" height="2" rx="1"></rect><rect x="11" y="9" width="5" height="2" rx="1"></rect><rect x="11" y="14" width="3" height="2" rx="1"></rect></svg><b>排序</b><span>ap-i-sort</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M10 3v9.5"></path><path class="ap-s" d="M6 8.5l4 4 4-4"></path><path class="ap-s" d="M3.5 16.5h13"></path></svg><b>下载</b><span>ap-i-download</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect class="ap-s" x="7" y="7" width="10" height="10" rx="2"></rect><path class="ap-s" d="M13 3H5a2 2 0 0 0-2 2v8"></path></svg><b>复制</b><span>ap-i-copy</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M3.5 5.5h13"></path><path class="ap-s" d="M7.5 5.5V4a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1.5"></path><path class="ap-s" d="M5.5 5.5l.8 11a1 1 0 0 0 1 .9h5.4a1 1 0 0 0 1-.9l.8-11"></path></svg><b>删除</b><span>ap-i-trash</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M10 4v12M4 10h12"></path></svg><b>添加</b><span>ap-i-plus</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M4 10h12"></path></svg><b>减少</b><span>ap-i-minus</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M5 5l10 10M15 5L5 15"></path></svg><b>关闭</b><span>ap-i-close</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M4 10.5l4 4 8-9"></path></svg><b>完成</b><span>ap-i-check</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="4" cy="10" r="1.7"></circle><circle cx="10" cy="10" r="1.7"></circle><circle cx="16" cy="10" r="1.7"></circle></svg><b>更多</b><span>ap-i-more</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M11.5 3H17v5.5"></path><path class="ap-s" d="M17 3l-7 7"></path><path class="ap-s" d="M14.5 11.5V16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1h4.5"></path></svg><b>外部地址</b><span>ap-i-link</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M6.1 5.5a6.5 6.5 0 1 0 7.8 0"></path><path class="ap-s" d="M10 2.5v7"></path></svg><b>重启</b><span>ap-i-power</span></div></div><p class="ap-label ap-mt-6">导航 <span class="ap-meta">· 方向与展开，不带强调 · 3 个</span></p><div class="kit-icons ap-mt-3"><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M12.5 4.5L7 10l5.5 5.5"></path></svg><b>返回</b><span>ap-i-chevron-left</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M7.5 4.5L13 10l-5.5 5.5"></path></svg><b>进入</b><span>ap-i-chevron-right</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M4.5 7.5L10 13l5.5-5.5"></path></svg><b>展开</b><span>ap-i-chevron-down</span></div></div><p class="ap-label ap-mt-6">状态 <span class="ap-meta">· 说明与警告，不带强调，颜色由所在位置决定 · 3 个</span></p><div class="kit-icons ap-mt-3"><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><circle class="ap-s" cx="10" cy="10" r="7"></circle><rect x="9" y="8.5" width="2" height="6" rx="1"></rect><circle cx="10" cy="5.75" r="1.25"></circle></svg><b>说明</b><span>ap-i-info</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M10 3L17.5 16.5H2.5z"></path><rect x="9" y="7.5" width="2" height="4.5" rx="1"></rect><circle cx="10" cy="14" r="1.1"></circle></svg><b>警告</b><span>ap-i-warning</span></div><div><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M3.28 9.28A9.5 9.5 0 0 1 16.72 9.28"></path><path class="ap-s" d="M5.76 11.76A6 6 0 0 1 14.24 11.76"></path><circle cx="10" cy="16" r="2"></circle><path class="ap-s" d="M3 3l14 14"></path></svg><b>离线</b><span>ap-i-offline</span></div></div></div></article><article class="ap-tile"><div class="ap-tag"><h3>工具图形</h3><span class="kit-cls">.ap-tool__glyph · 132 × 40</span></div><div class="ap-mt-5"><div class="kit-glyphs"><figure><svg class="ap-tool__glyph" viewBox="0 0 132 40" aria-hidden="true"><rect class="f" x="2" y="28" width="5" height="10"></rect><rect class="f" x="11" y="14" width="5" height="24"></rect><rect class="f" x="20" y="22" width="5" height="16"></rect><rect class="f" x="29" y="32" width="5" height="6"></rect><rect class="f" x="38" y="34" width="5" height="4"></rect><rect class="f" x="47" y="8" width="5" height="30"></rect><rect class="o" x="56" y="2" width="5" height="36"></rect><rect class="f" x="65" y="18" width="5" height="20"></rect><rect class="f" x="74" y="33" width="5" height="5"></rect><rect class="f" x="83" y="30" width="5" height="8"></rect><rect class="f" x="92" y="20" width="5" height="18"></rect><rect class="f" x="101" y="26" width="5" height="12"></rect><rect class="f" x="110" y="34" width="5" height="4"></rect></svg><b>Wi‑Fi 分析</b><span>信道柱。橙色：最强的信道</span></figure><figure><svg class="ap-tool__glyph" viewBox="0 0 132 40" aria-hidden="true"><circle class="f" cx="8" cy="20" r="4"></circle><circle class="f" cx="30" cy="10" r="2.5"></circle><circle class="f" cx="44" cy="28" r="3.5"></circle><circle class="o" cx="66" cy="16" r="5"></circle><circle class="f" cx="86" cy="30" r="2"></circle><circle class="f" cx="100" cy="12" r="3"></circle><circle class="f" cx="122" cy="24" r="2.5"></circle><path class="h" d="M66 4a12 12 0 0 1 0 24M66 0a16 16 0 0 1 0 32"></path></svg><b>BLE 扫描</b><span>设备散点。橙色：选中的设备</span></figure><figure><svg class="ap-tool__glyph" viewBox="0 0 132 40" aria-hidden="true"><path d="M2 20C10 4 18 4 26 20S42 36 50 20 66 4 74 20 90 36 98 20 114 4 122 20"></path><path class="h" d="M2 2H130" stroke-dasharray="2 4"></path><circle class="o" cx="122" cy="20" r="3.5"></circle></svg><b>数字示波器</b><span>正弦波。橙色：最新采样点</span></figure><figure><svg class="ap-tool__glyph" viewBox="0 0 132 40" aria-hidden="true"><path d="M2 34H14V6H34V34H54V6H74V34H94V6H114V34H130"></path><path class="os" d="M14 2H34"></path></svg><b>PWM 发生器</b><span>方波。橙色：高电平时长</span></figure><figure><svg class="ap-tool__glyph" viewBox="0 0 132 40" aria-hidden="true"><circle cx="9" cy="20" r="6"></circle><circle class="f" cx="123" cy="20" r="6"></circle><path class="h" d="M17 20H115" stroke-dasharray="2 4"></path><rect class="f" x="30" y="16" width="10" height="8" rx="1.5"></rect><rect class="f" x="52" y="16" width="10" height="8" rx="1.5"></rect><rect class="o" x="74" y="16" width="10" height="8" rx="1.5"></rect><path d="M96 14l6 6-6 6"></path></svg><b>网络诊断</b><span>两端节点与数据包。橙色：正在传输的包</span></figure><figure><svg class="ap-tool__glyph" viewBox="0 0 132 40" aria-hidden="true"><path d="M2 14H14V4H24V14H40V4H46V14H66V4H86V14H96V4H108V14H130"></path><path d="M2 36H20V26H34V36H52V26H60V36H76V26H100V36H112V26H130"></path><path class="os" d="M71 0V40" stroke-dasharray="3 3"></path></svg><b>逻辑分析</b><span>两路数字信号。橙色：测量光标</span></figure><figure><svg class="ap-tool__glyph" viewBox="0 0 132 40" aria-hidden="true"><path d="M2 3l6 5-6 5"></path><rect class="f" x="14" y="5" width="34" height="6" rx="1"></rect><rect class="f" x="52" y="5" width="20" height="6" rx="1"></rect><rect class="f" x="14" y="17" width="58" height="6" rx="1"></rect><rect class="f" x="76" y="17" width="26" height="6" rx="1"></rect><path d="M2 27l6 5-6 5"></path><rect class="f" x="14" y="29" width="24" height="6" rx="1"></rect><rect class="o" x="42" y="28" width="7" height="8" rx="1"></rect></svg><b>串口终端</b><span>终端文本行。橙色：输入光标</span></figure><figure><svg class="ap-tool__glyph" viewBox="0 0 132 40" aria-hidden="true"><rect class="f" x="2" y="6" width="10" height="10" rx="1.5"></rect><rect x="19" y="7" width="8" height="8" rx="1.5"></rect><rect class="f" x="34" y="6" width="10" height="10" rx="1.5"></rect><rect class="f" x="50" y="6" width="10" height="10" rx="1.5"></rect><rect x="83" y="7" width="8" height="8" rx="1.5"></rect><rect class="f" x="98" y="6" width="10" height="10" rx="1.5"></rect><rect x="115" y="7" width="8" height="8" rx="1.5"></rect><rect x="3" y="25" width="8" height="8" rx="1.5"></rect><rect class="f" x="18" y="24" width="10" height="10" rx="1.5"></rect><rect x="35" y="25" width="8" height="8" rx="1.5"></rect><rect x="51" y="25" width="8" height="8" rx="1.5"></rect><rect class="f" x="66" y="24" width="10" height="10" rx="1.5"></rect><rect class="f" x="82" y="24" width="10" height="10" rx="1.5"></rect><rect x="99" y="25" width="8" height="8" rx="1.5"></rect><rect x="115" y="25" width="8" height="8" rx="1.5"></rect><rect class="o" x="66" y="6" width="10" height="10" rx="1.5"></rect></svg><b>GPIO 控制</b><span>2 × 8 排针，实心为高电平。橙色：选中的引脚</span></figure><figure><svg class="ap-tool__glyph" viewBox="0 0 132 40" aria-hidden="true"><path d="M2 38H130"></path><path class="os" d="M14 38V4"></path><path d="M38 38V26.7M62 38V31.2M86 38V33.1M110 38V34.2"></path><path class="h" d="M2 36.5H130" stroke-dasharray="1 3"></path></svg><b>信号分析</b><span>方波的频谱：基波和奇次谐波。橙色：基波</span></figure><figure><svg class="ap-tool__glyph" viewBox="0 0 132 40" aria-hidden="true"><rect x="2" y="9" width="128" height="22" rx="2"></rect><rect class="f" x="6" y="13" width="8" height="14" rx="1"></rect><rect class="f" x="18" y="13" width="52" height="14" rx="1"></rect><rect class="o" x="74" y="13" width="10" height="14" rx="1"></rect><rect x="89" y="14" width="36" height="12" rx="1"></rect><path class="h" d="M94 18H120M94 22H112"></path></svg><b>系统工具</b><span>Flash 分区：引导、应用、NVS、LittleFS。橙色：必须保留的 NVS</span></figure></div><p class="ap-caption ap-mt-5">132 × 40，线宽 1.75。画工具真实处理的信号或对象，每个图形最多一处橙色。</p></div></article><article class="ap-tile"><div class="ap-tag"><h3>图标准则</h3><span class="kit-cls">AP-ICN</span></div><div class="ap-mt-5"><div class="kit-do"><div><b>应该</b><ul><li><svg class="ap-icon ap-icon--16" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M5 5l10 10M15 5L5 15"></path></svg>2 px 线条，圆头圆角</li><li><svg class="ap-icon ap-icon--16" viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="2" width="7" height="7" rx="1.6"></rect><rect x="11" y="2" width="7" height="7" rx="1.6"></rect><rect x="2" y="11" width="7" height="7" rx="1.6"></rect><rect class="ap-acc" x="11" y="11" width="7" height="7" rx="3.5"></rect></svg>入口图标最多一处橙色</li><li><svg class="ap-icon ap-icon--16" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M17 10A7 7 0 1 1 14.95 5.05L17 6.5"></path><path class="ap-s" d="M17 2.5v4h-4"></path></svg>操作图标全部用墨色</li><li><svg class="ap-icon ap-icon--16" viewBox="0 0 20 20" aria-hidden="true"><rect class="ap-s" x="2" y="3" width="16" height="14" rx="2"></rect><path class="ap-acc-s" d="M5 10c1.7-4.5 3.3-4.5 5 0s3.3 4.5 5 0"></path></svg>画真实的信号或对象</li></ul></div>
+<div class="no kit-bad"><b>不应该</b><ul><li><svg class="ap-icon ap-icon--16" viewBox="0 0 20 20" aria-hidden="true"><path class="kit-thin" d="M5 5l10 10M15 5L5 15"></path></svg>1 px 细线，或与 2 px 混用</li><li><svg class="ap-icon ap-icon--16" viewBox="0 0 20 20" aria-hidden="true"><rect class="ap-acc" x="2" y="2" width="7" height="7" rx="1.6"></rect><rect x="11" y="2" width="7" height="7" rx="1.6"></rect><rect x="2" y="11" width="7" height="7" rx="1.6"></rect><rect class="ap-acc" x="11" y="11" width="7" height="7" rx="3.5"></rect></svg>一个图标里两处强调色</li><li><svg class="ap-icon ap-icon--16" viewBox="0 0 20 20" aria-hidden="true"><path class="ap-s" d="M10 1C4 1 1 5 1 10s3 9 9 9 9-4 9-9"></path></svg>超出 2 px 安全边距</li><li>使用表情符号、图标字体或第三方图标库</li></ul></div></div></div></article></div><div class="ap-group" id="g-布局"><span>布局</span><span>顶栏 · 面板网格</span></div><div class="ap-board"><article class="ap-tile"><div class="ap-tag"><h3>顶栏</h3><span class="kit-cls">.ap-top .ap-brand .ap-seg .ap-actions</span></div><div class="ap-mt-5"><div class="ap-board"><div class="ap-tile" style="padding-top: 0px; padding-bottom: 0px;"><div class="ap-top" style="padding-left: 0px; padding-right: 0px;"><div class="ap-brand"><b>Aphelion</b><span>传感器终端</span></div>
+<nav class="ap-seg kit-seg" aria-label="示例"><button aria-pressed="true">传感器</button><button aria-pressed="false">Wi‑Fi 接入</button></nav>
+<div class="ap-actions"><button class="ap-iconbtn kit-toggle" aria-pressed="false" aria-label="工具箱"><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="2" width="7" height="7" rx="1.6"></rect><rect x="11" y="2" width="7" height="7" rx="1.6"></rect><rect x="2" y="11" width="7" height="7" rx="1.6"></rect><rect class="ap-acc" x="11" y="11" width="7" height="7" rx="3.5"></rect></svg></button><button class="ap-iconbtn kit-toggle" aria-pressed="true" aria-label="系统设置"><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="4" width="16" height="2" rx="1"></rect><rect x="2" y="9" width="16" height="2" rx="1"></rect><rect x="2" y="14" width="16" height="2" rx="1"></rect><circle cx="13" cy="5" r="2.6"></circle><circle class="ap-acc" cx="7" cy="10" r="2.6"></circle><circle cx="12" cy="15" r="2.6"></circle></svg></button><span class="ap-lamp is-on">设备在线</span></div></div></div></div></div></article><article class="ap-tile"><div class="ap-tag"><h3>面板网格</h3><span class="kit-cls">.ap-board .ap-tile .ap-w* .ap-m6</span></div><div class="ap-mt-5"><div class="ap-board kit-grid"><div class="ap-tile ap-w7">w7</div><div class="ap-tile ap-w5">w5</div><div class="ap-tile ap-w8">w8</div><div class="ap-tile ap-w4">w4</div><div class="ap-tile ap-w4 ap-m6">w4 · m6</div><div class="ap-tile ap-w4 ap-m6">w4 · m6</div><div class="ap-tile ap-w4 ap-m6">w4 · m6</div><div class="ap-tile ap-w6">w6</div><div class="ap-tile ap-w6">w6（隐藏相邻块时自动补满）</div></div>
+<p class="ap-caption ap-mt-3">12 栏弹性分配。宽度 ≤ 780 px 时全部变为整行，带 ap-m6 的变为半行。同一行宽度之和应为 12。</p></div></article><article class="ap-tile ap-w6"><div class="ap-tag"><h3>面板头</h3><span class="kit-cls">.ap-tag</span></div><div class="ap-mt-5"><div class="ap-tag"><h2>声音</h2><span>INMP441 · 读数正常</span></div><p class="ap-caption ap-mt-4">左侧为区块名（14 / 600），右侧为元信息（12 等宽）。每个面板都以它开头。</p></div></article><article class="ap-tile ap-w6"><div class="ap-tag"><h3>分组标题</h3><span class="kit-cls">.ap-group</span></div><div class="ap-mt-5"><div class="ap-group" style="margin: 0px;"><span>首版</span><span>无线工具与实时波形</span></div><p class="ap-caption ap-mt-4">放在两块面板之间，不放在面板里。</p></div></article></div><div class="ap-group" id="g-读数与信号"><span>读数与信号</span><span>数值 · 电平 · 曲线 · 仿真屏</span></div><div class="ap-board"><article class="ap-tile ap-w7"><div class="ap-tag"><h3>主读数</h3><span class="kit-cls">.ap-readout</span></div><div class="ap-mt-5"><div class="ap-readout"><strong>24.6</strong><span>°C</span></div><p class="ap-caption ap-mt-4">每页最多一个。保留 1 位小数；无数据时显示「—」。</p></div></article><article class="ap-tile ap-w5"><div class="ap-tag"><h3>次读数与填充条</h3><span class="kit-cls">.ap-readout--l .ap-bar .ap-scale</span></div><div class="ap-mt-5"><div class="ap-readout ap-readout--l"><strong>52.3</strong><span>%RH</span></div><div class="ap-bar ap-mt-5"><i style="width: 52.3%;"></i></div><div class="ap-scale"><span>0</span><span>50</span><span>100</span></div></div></article><article class="ap-tile ap-w8"><div class="ap-tag"><h3>电平表与曲线</h3><span class="kit-cls">.ap-meter .ap-trace</span></div><div class="ap-mt-5"><div class="ap-meter" id="kit-meter"></div><p class="ap-caption ap-mt-3">25 段，末 3 段为削峰段，点亮时为强调色。</p><canvas class="ap-trace ap-mt-4" id="kit-trace" aria-label="演示曲线"></canvas><div class="ap-scale"><span>−60 s</span><span><span class="ap-badge ap-badge--demo">演示</span></span><span>现在</span></div></div></article><article class="ap-tile ap-w4"><div class="ap-tag"><h3>仿真屏与实体按键</h3><span class="kit-cls">.ap-screen .ap-dots .ap-knob</span></div><div class="ap-mt-5"><div class="ap-screen"><p class="ap-screen__text" id="kit-screen">总览</p><div class="ap-dots" id="kit-dots"><i class="is-on"></i><i></i><i></i><i></i></div></div><button class="ap-knob ap-mt-5" id="kit-knob" type="button">切换 OLED 页面</button></div></article><article class="ap-tile ap-w6"><div class="ap-tag"><h3>辅助读数</h3><span class="kit-cls">.ap-readout--m .ap-readout--mono</span></div><div class="ap-mt-5"><div class="ap-pair"><div class="ap-readout ap-readout--m"><strong>−46.0</strong><span>dBFS</span></div><div class="ap-readout ap-readout--m ap-readout--mono"><strong>23:59:12</strong></div></div></div></article><article class="ap-tile ap-w6"><div class="ap-tag"><h3>信号格</h3><span class="kit-cls">.ap-signal[data-level]</span></div><div class="ap-mt-5"><div class="kit-row"><span class="ap-signal" data-level="3"><i></i><i></i><i></i></span><span class="ap-meta">强 ≥ −60 dBm</span><span class="ap-signal" data-level="2"><i></i><i></i><i></i></span><span class="ap-meta">中 ≥ −75</span><span class="ap-signal" data-level="1"><i></i><i></i><i></i></span><span class="ap-meta">弱</span></div></div></article></div><div class="ap-group" id="g-控件"><span>控件</span><span>按钮 · 开关 · 导航</span></div><div class="ap-board"><article class="ap-tile ap-w7"><div class="ap-tag"><h3>按钮</h3><span class="kit-cls">.ap-btn --quiet --danger --s</span></div><div class="ap-mt-5"><div class="kit-row"><button class="ap-btn">连接</button><button class="ap-btn ap-btn--quiet">取消</button><button class="ap-btn ap-btn--danger">停止输出</button><button class="ap-btn" disabled="">启动</button></div><div class="kit-row ap-mt-4"><button class="ap-btn ap-btn--s">小号</button><button class="ap-btn ap-btn--quiet ap-btn--s">打开系统设置</button><button class="ap-btn is-busy">正在提交…</button></div><p class="ap-caption ap-mt-4">一个面板最多一个墨色主按钮。危险操作用描边款，不用实心强调色。</p></div></article><article class="ap-tile ap-w5"><div class="ap-tag"><h3>文字按钮与链接</h3><span class="kit-cls">.ap-link .ap-url .ap-code</span></div><div class="ap-mt-5"><div class="ap-stack" style="gap: 8px;"><button class="ap-link">重新扫描</button><button class="ap-link">‹ 返回网络列表</button><a class="ap-url" href="#">http://192.168.1.86/</a><p class="ap-small">打开 <code class="ap-code">http://192.168.4.1</code></p></div></div></article><article class="ap-tile ap-w4"><div class="ap-tag"><h3>开关</h3><span class="kit-cls">.ap-switch[role=switch]</span></div><div class="ap-mt-5"><div class="kit-row"><button class="ap-switch kit-switch" role="switch" aria-checked="true" aria-label="开"></button><button class="ap-switch kit-switch" role="switch" aria-checked="false" aria-label="关"></button><button class="ap-switch" role="switch" aria-checked="true" disabled="" aria-label="禁用"></button></div></div></article><article class="ap-tile ap-w4"><div class="ap-tag"><h3>分段导航</h3><span class="kit-cls">.ap-seg</span></div><div class="ap-mt-5"><nav class="ap-seg kit-seg"><button aria-pressed="false">传感器</button><button aria-pressed="true">Wi‑Fi 接入</button></nav></div></article><article class="ap-tile ap-w4"><div class="ap-tag"><h3>状态灯</h3><span class="kit-cls">.ap-lamp .is-on .is-idle</span></div><div class="ap-mt-5"><div class="ap-stack" style="gap: 10px;"><span class="ap-lamp is-on">设备在线</span><span class="ap-lamp">连接中断</span><span class="ap-lamp is-idle">正在读取</span></div></div></article></div><div class="ap-group" id="g-表单"><span>表单</span><span>输入 · 选择 · 校验</span></div><div class="ap-board"><article class="ap-tile ap-w6"><div class="ap-tag"><h3>输入框</h3><span class="kit-cls">.ap-field .ap-input .ap-hint</span></div><div class="ap-mt-5"><div class="ap-stack" style="gap: 20px;"><div class="ap-field"><label for="k1">隐藏网络名称</label><input class="ap-input" id="k1" placeholder="最多 32 字节"></div><div class="ap-field"><label for="k2">Wi‑Fi 密码</label><input class="ap-input" id="k2" type="password" value="password"><p class="ap-hint">开放网络可留空。</p></div></div></div></article><article class="ap-tile ap-w6"><div class="ap-tag"><h3>选择与校验</h3><span class="kit-cls">.ap-select .is-invalid</span></div><div class="ap-mt-5"><div class="ap-stack" style="gap: 20px;"><div class="ap-field"><label for="k3">显示时区</label><select class="ap-select" id="k3"><option>跟随浏览器</option><option>香港 · UTC+8</option><option>伦敦 · UTC+0</option></select></div><div class="ap-field is-invalid"><label for="k4">频率</label><input class="ap-input" id="k4" value="0"><p class="ap-hint">频率需大于 0 Hz。</p></div></div></div></article></div><div class="ap-group" id="g-列表与信息"><span>列表与信息</span><span>列表 · 设置行 · 键值 · 徽标 · 反馈</span></div><div class="ap-board"><article class="ap-tile ap-w7"><div class="ap-tag"><h3>列表项</h3><span class="kit-cls">.ap-list .ap-item .ap-item__meta</span></div><div class="ap-mt-5"><ul class="ap-list"><li><button class="ap-item"><strong>Studio‑2.4G</strong><span class="ap-item__meta"><small>已连接 · WPA2 · 强</small><span class="ap-signal" data-level="3"><i></i><i></i><i></i></span></span></button></li><li><button class="ap-item"><strong>Lab_IoT</strong><span class="ap-item__meta"><small>WPA2 · 中</small><span class="ap-signal" data-level="2"><i></i><i></i><i></i></span></span></button></li><li><button class="ap-item" disabled=""><strong>Office‑Enterprise</strong><span class="ap-item__meta"><small>暂不支持 · 中</small><span class="ap-signal" data-level="2"><i></i><i></i><i></i></span></span></button></li></ul></div></article><article class="ap-tile ap-w5"><div class="ap-tag"><h3>设置行</h3><span class="kit-cls">.ap-setting</span></div><div class="ap-mt-5"><ul><li class="ap-setting"><div class="ap-setting__text"><strong>温湿度</strong><span>SHT40 温度和湿度读数</span></div><button class="ap-switch kit-switch" role="switch" aria-checked="true" aria-label="温湿度"></button></li><li class="ap-setting"><div class="ap-setting__text"><strong>后续工具</strong><span>列出尚未提供的工具</span></div><button class="ap-switch kit-switch" role="switch" aria-checked="false" aria-label="后续工具"></button></li></ul></div></article><article class="ap-tile ap-w6"><div class="ap-tag"><h3>键值表</h3><span class="kit-cls">.ap-kv</span></div><div class="ap-mt-5"><dl class="ap-kv"><div><dt>芯片</dt><dd>ESP32‑S3</dd></div><div><dt>固件版本</dt><dd>—</dd></div><div><dt>局域网地址</dt><dd>192.168.1.86</dd></div></dl></div></article><article class="ap-tile ap-w6"><div class="ap-tag"><h3>徽标与反馈</h3><span class="kit-cls">.ap-badge .ap-status .ap-banner</span></div><div class="ap-mt-5"><div class="kit-row"><span class="ap-badge">首版</span><span class="ap-badge ap-badge--ink">预览</span><span class="ap-badge ap-badge--demo">演示</span></div><p class="ap-status ap-mt-4">已提交，请查看左侧路由器状态。</p><p class="ap-status is-error">提交失败，请确认已连上设备热点。</p><p class="ap-banner ap-mt-3" style="margin-bottom: 0px;">无法读取设备，正在重试。</p></div></article></div><div class="ap-group" id="g-数据与调节"><span>数据与调节</span><span>表格 · 测量 · 输入 · 滑块 · 筛选 · 原始数据</span></div><div class="ap-board"><article class="ap-tile ap-w7"><div class="ap-tag"><h3>数据表</h3><span class="kit-cls">.ap-table-wrap .ap-table .ap-cellbtn</span></div><div class="ap-mt-5"><div class="ap-table-wrap"><table class="ap-table"><thead><tr><th>SSID</th><th>BSSID</th><th class="num">信道</th><th class="num">RSSI</th><th>加密</th></tr></thead><tbody>
+<tr class="is-selected"><td><button class="ap-cellbtn" type="button">Studio‑2.4G<span class="ap-badge">同名 ×2</span></button></td><td class="mono">a4:2b:b0:11:3c:01</td><td class="num">6</td><td class="num">−48</td><td>WPA2</td></tr>
+<tr><td><button class="ap-cellbtn" type="button">Studio‑2.4G<span class="ap-badge">同名 ×2</span></button></td><td class="mono">a4:2b:b0:11:3c:09</td><td class="num">1</td><td class="num">−63</td><td>WPA2</td></tr>
+<tr><td><button class="ap-cellbtn ap-muted" type="button">（隐藏网络）</button></td><td class="mono">f0:9f:c2:6a:01:7e</td><td class="num">6</td><td class="num">−72</td><td class="dim">开放</td></tr></tbody></table></div>
+<p class="ap-caption ap-mt-3">表头 12 等宽，数字列右对齐。选中行左侧 3 px 强调条。窄屏时表格在自己的容器里横向滚动。</p></div></article><article class="ap-tile ap-w5"><div class="ap-tag"><h3>测量网格</h3><span class="kit-cls">.ap-measures</span></div><div class="ap-mt-5"><dl class="ap-measures"><div><dt class="ap-caption">频率</dt><dd class="ap-readout ap-readout--m"><strong>99.9</strong><span>Hz</span></dd></div><div><dt class="ap-caption">周期</dt><dd class="ap-readout ap-readout--m"><strong>10.01</strong><span>ms</span></dd></div><div><dt class="ap-caption">占空比</dt><dd class="ap-readout ap-readout--m"><strong>49.9</strong><span>%</span></dd></div><div><dt class="ap-caption">最大</dt><dd class="ap-readout ap-readout--m"><strong>3.10</strong><span>V</span></dd></div><div><dt class="ap-caption">最小</dt><dd class="ap-readout ap-readout--m"><strong>0.00</strong><span>V</span></dd></div><div><dt class="ap-caption">峰峰值</dt><dd class="ap-readout ap-readout--m"><strong>—</strong><span>V</span></dd></div></dl></div></article><article class="ap-tile ap-w6"><div class="ap-tag"><h3>带单位输入与预设</h3><span class="kit-cls">.ap-affix .ap-seg--s .ap-seg--block</span></div><div class="ap-mt-5"><div class="ap-ctl"><label class="ap-label" for="kf">频率</label><div class="ap-affix"><input id="kf" type="number" value="100"><select aria-label="单位"><option>Hz</option><option>kHz</option></select></div>
+<nav class="ap-seg ap-seg--s ap-seg--block ap-mt-3 kit-seg"><button type="button" aria-pressed="false">50 Hz</button><button type="button" aria-pressed="true">100 Hz</button><button type="button" aria-pressed="false">1 kHz</button><button type="button" aria-pressed="false">10 kHz</button></nav></div>
+<div class="ap-ctl ap-mt-5"><label class="ap-label" for="kf2">无效输入</label><div class="ap-affix is-invalid" style="max-width: 180px;"><input id="kf2" type="number" value="120"><span>%</span></div><p class="ap-hint is-error ap-mt-2">占空比需在 0–100 % 之间。</p></div></div></article><article class="ap-tile ap-w6"><div class="ap-tag"><h3>滑块与控件组</h3><span class="kit-cls">.ap-range .ap-controls .ap-ctl</span></div><div class="ap-mt-5"><div class="ap-controls"><div class="ap-ctl"><label class="ap-label" for="kr"><span>触发电平</span><span class="ap-meta" id="kr-v">1.65 V</span></label><input type="range" class="ap-range" id="kr" min="0" max="3300" step="10" value="1650" style="--p: 50%;"></div>
+<div class="ap-ctl"><label class="ap-label" for="kr2"><span>已停用</span></label><input type="range" class="ap-range" id="kr2" value="30" style="--p: 30%;" disabled=""></div>
+<div class="ap-btnrow"><button class="ap-btn" type="button">启动输出</button><button class="ap-btn ap-btn--danger" type="button">停止输出</button></div></div>
+<p class="ap-caption ap-mt-4">轨道是墨色填充，滑钮是能拖动的实体控件，所以用强调色。</p></div></article><article class="ap-tile"><div class="ap-tag"><h3>状态与徽标（1.1 新增）</h3><span class="kit-cls">.ap-lamp.is-live .ap-badge--alert</span></div><div class="ap-mt-5"><div class="kit-row"><span class="ap-lamp is-live">输出中</span><span class="ap-lamp is-live">采集中</span><span class="ap-lamp is-idle">已停止</span><span class="ap-badge ap-badge--alert">削顶</span><span class="ap-badge ap-badge--demo">演示</span></div>
+<p class="ap-caption ap-mt-3">带光环的橙灯表示硬件正在工作；不带光环的橙灯表示连接中断。「削顶」徽标表示测量值不可信，需要处理。</p></div></article><article class="ap-tile ap-w6"><div class="ap-tag"><h3>筛选栏</h3><span class="kit-cls">.ap-toolbar .ap-input--s .ap-check</span></div><div class="ap-mt-5"><div class="ap-toolbar"><input class="ap-input ap-input--s" type="search" placeholder="按名称、地址或类型筛选" aria-label="筛选（示例）">
+<span class="ap-check"><button type="button" class="ap-switch kit-switch" role="switch" aria-checked="false" aria-labelledby="kit-anon"></button><span id="kit-anon">隐藏无名称设备</span></span></div>
+<p class="ap-caption ap-mt-4">放在列表上方。筛选是即时的，不需要「搜索」按钮；面板头右侧同时写出「显示 6 / 16 台」。</p></div></article><article class="ap-tile ap-w6"><div class="ap-tag"><h3>原始数据</h3><span class="kit-cls">.ap-hex</span></div><div class="ap-mt-5"><p class="ap-meta">广播包 · 30 字节</p><p class="ap-hex ap-mt-2"><b>02 01</b> 06   <b>1a ff</b> 4c 00 02 15 41 70 68 65 6c 69 6f 6e 00 00 00 00 00 00 00 01 00 01 00 2a c5</p>
+<p class="ap-caption ap-mt-3">灰色字节是每段的长度和类型。原始数据总是和解析结果一起给出，不单独出现。</p></div></article></div><div class="ap-group"><span>组合</span><span>工具卡 · 空状态</span></div><div class="ap-board"><button class="ap-tile ap-tool ap-w6" type="button"><span class="ap-tool__phase"><span>首版</span><i aria-hidden="true">→</i></span><svg class="ap-tool__glyph" viewBox="0 0 132 40" aria-hidden="true"><path d="M2 34H14V6H34V34H54V6H74V34H94V6H114V34H130"></path><path class="os" d="M14 2H34"></path></svg><strong class="ap-tool__name">PWM 发生器</strong><span class="ap-tool__spec">GPIO5 · LEDC</span><span class="ap-tool__desc">在 GPIO5 输出方波，网页上调节频率和占空比。</span></button>
+<button class="ap-tile ap-tool ap-tool--compact ap-w6" type="button"><span class="ap-tool__phase"><span>后续 · 阶段 2</span><i aria-hidden="true">→</i></span><svg class="ap-tool__glyph" viewBox="0 0 132 40" aria-hidden="true"><path d="M2 3l6 5-6 5"></path><rect class="f" x="14" y="5" width="34" height="6" rx="1"></rect><rect class="f" x="52" y="5" width="20" height="6" rx="1"></rect><rect class="f" x="14" y="17" width="58" height="6" rx="1"></rect><rect class="f" x="76" y="17" width="26" height="6" rx="1"></rect><path d="M2 27l6 5-6 5"></path><rect class="f" x="14" y="29" width="24" height="6" rx="1"></rect><rect class="o" x="42" y="28" width="7" height="8" rx="1"></rect></svg><strong class="ap-tool__name">串口终端</strong><span class="ap-tool__spec">UART · I²C · SPI</span><span class="ap-tool__desc">UART 收发终端，以及 I²C、SPI 总线调试。</span></button></div><div class="ap-board"><article class="ap-tile ap-empty"><p class="ap-title-l">传感器面板已全部关闭</p><p class="ap-caption">在系统设置的「功能开关」里可以重新开启。</p><button class="ap-btn ap-btn--quiet ap-btn--s" type="button">打开系统设置</button></article></div><div class="ap-group"><span>准则</span><span>应该与不应该</span></div><div class="ap-board"><article class="ap-tile"><div class="kit-do"><div><b>应该</b><ul><li>每页只有一个主读数，其余逐级变小</li><li>用 1 px 结构线分区，不用阴影</li><li>强调橙只出现在按键、最新数据点、削峰段和焦点环上</li><li>没有数据就显示「—」，演示数据挂「演示」徽标</li><li>标签说清楚单位和来源传感器</li></ul></div>
+<div class="no"><b>不应该</b><ul><li>给每块内容套独立卡片和阴影</li><li>用强调橙做大面积背景、标题或装饰</li><li>引入渐变、毛玻璃、表情符号或外部字体</li><li>编造固件没有返回的数值</li><li>在一个面板里放两个墨色主按钮</li></ul></div></div></article></div>
+
+<div class="ap-group" id="g-14"><span>1.4 新增 · 美工与素材库</span><span>令牌 · 丝印 · 迷你曲线 · 二维码 · 阶段 A 草图</span></div>
+<div class="ap-board">
+  <article class="ap-tile ap-w6 ap-mark--corner">
+    <div class="ap-tag"><h3><span class="ap-mark--index" aria-hidden="true">01</span>新令牌与状态灯</h3><span class="ap-meta">1.4 对比度修正</span></div>
+    <div class="ap-mt-5" style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+      <span style="display:inline-flex;align-items:center;gap:6px"><i style="display:inline-block;width:16px;height:16px;border-radius:4px;background:var(--ap-focus)"></i><span class="ap-meta">--ap-focus</span></span>
+      <span style="display:inline-flex;align-items:center;gap:6px"><i style="display:inline-block;width:16px;height:16px;border-radius:4px;background:var(--ap-readout)"></i><span class="ap-meta">--ap-readout</span></span>
+      <span style="display:inline-flex;align-items:center;gap:6px"><i style="display:inline-block;width:16px;height:16px;border-radius:4px;background:var(--ap-ok)"></i><span class="ap-meta">--ap-ok (#178A3B)</span></span>
+    </div>
+    <div class="ap-mt-5" style="display:flex;flex-wrap:wrap;gap:16px">
+      <span class="ap-lamp is-on" role="status">设备在线</span>
+      <span class="ap-lamp" role="status">连接中断（空心圆环）</span>
+      <span class="ap-lamp is-live" role="status">输出中</span>
+      <span class="ap-lamp is-idle" role="status">正在读取</span>
+    </div>
+    <div class="ap-mark--ruler" aria-hidden="true"></div>
+    <p class="ap-caption ap-mt-3">本面板展示丝印元素：四角定位角标、面板序号 <code>01</code> 与下方刻度尺（AP-SHP-05）。</p>
+  </article>
+  <article class="ap-tile ap-w6">
+    <div class="ap-tag"><h3>迷你曲线与二维码</h3><span class="ap-meta">.ap-spark · .ap-qr</span></div>
+    <div class="ap-mt-5" style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+      <div>
+        <div class="ap-caption">60 s 温度走势</div>
+        <div class="ap-mt-2" style="display:flex;align-items:center;gap:10px">
+          <strong style="font:600 22px var(--ap-mono);font-variant-numeric:tabular-nums">24.6 °C</strong>
+          <svg class="ap-spark" viewBox="0 0 72 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M2 18L12 15L22 17L32 11L42 13L52 8L62 10L68 6"/><circle cx="68" cy="6" r="2.5" fill="var(--ap-accent)"/></svg>
+        </div>
+      </div>
+      <div class="ap-qr">
+        <div class="ap-qr__box"><svg viewBox="0 0 21 21" width="84" height="84" role="img" aria-label="控制台地址二维码示例"><rect x="0" y="0" width="7" height="7" fill="none" stroke="#141414" stroke-width="1"/><rect x="2" y="2" width="3" height="3" fill="#141414"/><rect x="14" y="0" width="7" height="7" fill="none" stroke="#141414" stroke-width="1"/><rect x="16" y="2" width="3" height="3" fill="#141414"/><rect x="0" y="14" width="7" height="7" fill="none" stroke="#141414" stroke-width="1"/><rect x="2" y="16" width="3" height="3" fill="#141414"/><rect x="9" y="2" width="2" height="2" fill="#141414"/><rect x="9" y="6" width="3" height="2" fill="#141414"/><rect x="2" y="9" width="3" height="2" fill="#141414"/><rect x="7" y="9" width="2" height="3" fill="#141414"/><rect x="11" y="9" width="2" height="2" fill="#141414"/><rect x="15" y="9" width="4" height="2" fill="#141414"/><rect x="9" y="13" width="2" height="3" fill="#141414"/><rect x="13" y="13" width="3" height="2" fill="#141414"/><rect x="18" y="13" width="2" height="4" fill="#141414"/><rect x="10" y="18" width="4" height="2" fill="#141414"/><rect x="16" y="18" width="4" height="2" fill="#141414"/></svg></div>
+        <span class="ap-meta">http://192.168.4.1</span>
+      </div>
+    </div>
+  </article>
+  <article class="ap-tile ap-w12">
+    <div class="ap-tag"><h3>阶段 A 素材草图</h3><span class="ap-meta">品牌符号 · 7 个 20 px 图标 · 6 个 24 px 启动器母版</span></div>
+    <div class="ap-mt-5" style="display:flex;align-items:center;gap:16px;padding-bottom:16px;border-bottom:1px solid var(--ap-off)">
+      <svg class="ap-icon ap-icon--24" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path class="ap-s" d="M4.5 14.5A8.2 4.6 -35 1 1 15.5 5.5A8.2 4.6 -35 1 1 4.5 14.5Z"/><circle class="ap-acc" cx="15.5" cy="5.5" r="2.5"/></svg>
+      <div><strong style="font-weight:700;letter-spacing:-.01em">Aphelion</strong> <span class="ap-badge">草图</span><div class="ap-caption">品牌符号（轨道 + 远日点）· 仅用于 favicon、开机画面、关于本机（AP-BRN-02）</div></div>
+    </div>
+    <div class="ap-mt-5 ap-caption">新增 20 × 20 界面图标（草图）</div>
+    <div class="ap-mt-3" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px"><div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border:1px solid var(--ap-off);border-radius:var(--ap-r-ctl)"><svg class="ap-icon" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><rect class="ap-s" x="3" y="4.5" width="14" height="12.5" rx="2"/><path class="ap-s" d="M6.5 3v2.5M13.5 3v2.5M3 8.5h14"/><rect class="ap-acc" x="6.5" y="11" width="3" height="3" rx="0.6"/></svg><span class="ap-micro">日历</span><span class="ap-micro" style="color:var(--ap-muted)">calendar</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border:1px solid var(--ap-off);border-radius:var(--ap-r-ctl)"><svg class="ap-icon" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><circle class="ap-s" cx="10" cy="11.5" r="5.5"/><path class="ap-s" d="M10 11.5V8.5M10 11.5l2 1.5"/><rect class="ap-acc" x="7.5" y="2.5" width="5" height="2" rx="1"/></svg><span class="ap-micro">计时</span><span class="ap-micro" style="color:var(--ap-muted)">timer</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border:1px solid var(--ap-off);border-radius:var(--ap-r-ctl)"><svg class="ap-icon" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path class="ap-s" d="M6 9a4 4 0 0 1 8 0v3.5l1.5 2H4.5l1.5-2V9Z"/><path class="ap-s" d="M8.5 16.5a1.5 1.5 0 0 0 3 0"/><circle class="ap-acc" cx="15.5" cy="4.5" r="2"/></svg><span class="ap-micro">通知</span><span class="ap-micro" style="color:var(--ap-muted)">bell</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border:1px solid var(--ap-off);border-radius:var(--ap-r-ctl)"><svg class="ap-icon" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path class="ap-s" d="M15.5 12.2A6 6 0 0 1 7.8 4.5a6 6 0 1 0 7.7 7.7Z"/></svg><span class="ap-micro">勿扰</span><span class="ap-micro" style="color:var(--ap-muted)">moon</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border:1px solid var(--ap-off);border-radius:var(--ap-r-ctl)"><svg class="ap-icon" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><circle class="ap-s" cx="10" cy="10" r="3.2"/><path class="ap-s" d="M10 3v1.5M10 15.5V17M3 10h1.5M15.5 10H17M5 5l1.1 1.1M13.9 13.9L15 15M15 5l-1.1 1.1M6.1 13.9L5 15"/></svg><span class="ap-micro">亮度</span><span class="ap-micro" style="color:var(--ap-muted)">sun</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border:1px solid var(--ap-off);border-radius:var(--ap-r-ctl)"><svg class="ap-icon" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path class="ap-s" d="M6.5 6.5l7 7-3.5 3.5V3l3.5 3.5-7 7"/></svg><span class="ap-micro">BLE 状态</span><span class="ap-micro" style="color:var(--ap-muted)">ble-status</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border:1px solid var(--ap-off);border-radius:var(--ap-r-ctl)"><svg class="ap-icon" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><rect class="ap-s" x="3" y="6" width="12.5" height="8" rx="1.5"/><rect x="16.5" y="8" width="1.5" height="4" rx="0.6"/><rect x="5.5" y="8.5" width="3.5" height="3" rx="0.5"/></svg><span class="ap-micro">电池</span><span class="ap-micro" style="color:var(--ap-muted)">battery</span></div></div>
+    <div class="ap-mt-5 ap-caption">本地屏 24 × 24 启动器应用图标母版（草图）</div>
+    <div class="ap-mt-3" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px"><div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border:1px solid var(--ap-off);border-radius:var(--ap-r-ctl)"><svg class="ap-icon ap-icon--24" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><rect class="ap-s" x="3.5" y="5" width="17" height="15.5" rx="2"/><path class="ap-s" d="M8 3v3M16 3v3M3.5 9.5h17"/><rect class="ap-acc" x="7.5" y="13" width="3.5" height="3.5" rx="0.8"/></svg><span class="ap-micro">日历</span><span class="ap-micro" style="color:var(--ap-muted)">24 px</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border:1px solid var(--ap-off);border-radius:var(--ap-r-ctl)"><svg class="ap-icon ap-icon--24" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><circle class="ap-s" cx="12" cy="13.5" r="7"/><path class="ap-s" d="M12 13.5V9.5M12 13.5l2.5 2"/><rect class="ap-acc" x="9" y="3" width="6" height="2" rx="1"/></svg><span class="ap-micro">计时</span><span class="ap-micro" style="color:var(--ap-muted)">24 px</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border:1px solid var(--ap-off);border-radius:var(--ap-r-ctl)"><svg class="ap-icon ap-icon--24" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path class="ap-s" d="M5 17.5a8.5 8.5 0 1 1 14 0"/><path class="ap-acc-s" d="M12 14.5l4-4"/><circle cx="12" cy="14.5" r="2"/></svg><span class="ap-micro">传感器</span><span class="ap-micro" style="color:var(--ap-muted)">24 px</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border:1px solid var(--ap-off);border-radius:var(--ap-r-ctl)"><svg class="ap-icon ap-icon--24" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><rect x="3.5" y="3.5" width="7.5" height="7.5" rx="1.8"/><rect x="13" y="3.5" width="7.5" height="7.5" rx="1.8"/><rect x="3.5" y="13" width="7.5" height="7.5" rx="1.8"/><circle class="ap-acc" cx="16.75" cy="16.75" r="3.75"/></svg><span class="ap-micro">工具</span><span class="ap-micro" style="color:var(--ap-muted)">24 px</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border:1px solid var(--ap-off);border-radius:var(--ap-r-ctl)"><svg class="ap-icon ap-icon--24" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path class="ap-s" d="M7 10.5a5 5 0 0 1 10 0v4.5l2 2.5H5l2-2.5v-4.5Z"/><path class="ap-s" d="M10 20a2 2 0 0 0 4 0"/><circle class="ap-acc" cx="18.5" cy="5.5" r="2.2"/></svg><span class="ap-micro">通知</span><span class="ap-micro" style="color:var(--ap-muted)">24 px</span></div><div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border:1px solid var(--ap-off);border-radius:var(--ap-r-ctl)"><svg class="ap-icon ap-icon--24" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path class="ap-s" d="M4 6.5h16M4 12h16M4 17.5h16"/><circle cx="8" cy="6.5" r="2.2"/><circle class="ap-acc" cx="15.5" cy="12" r="2.4"/><circle cx="10" cy="17.5" r="2.2"/></svg><span class="ap-micro">设置</span><span class="ap-micro" style="color:var(--ap-muted)">24 px</span></div></div>
+  </article>
+</div>
+
+</main>
+<script>
+'use strict';
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const kt=document.getElementById('kit-theme');let ktv='auto';try{ktv=localStorage.getItem('aphelion.kit.theme')||'auto'}catch(e){}
+const setKT=v=>{ktv=v;try{localStorage.setItem('aphelion.kit.theme',v)}catch(e){};document.documentElement.dataset.theme=v==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):v;kt.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.v===v)));requestAnimationFrame(()=>frame());};
+kt.querySelectorAll('button').forEach(b=>b.onclick=()=>setKT(b.dataset.v));
+const kr=document.getElementById('kr');kr.oninput=()=>{kr.style.setProperty('--p',kr.value/33+'%');document.getElementById('kr-v').textContent=(kr.value/1000).toFixed(2)+' V'};
+document.querySelectorAll('.kit-switch').forEach(s=>s.onclick=()=>s.setAttribute('aria-checked',String(s.getAttribute('aria-checked')!=='true')));
+document.querySelectorAll('.kit-seg').forEach(n=>n.querySelectorAll('button').forEach(b=>b.onclick=()=>n.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)))));
+document.querySelectorAll('.kit-toggle').forEach(b=>b.onclick=()=>b.setAttribute('aria-pressed',String(b.getAttribute('aria-pressed')!=='true')));
+const views=['总览','温湿度详情','声音详情','时钟'];let v=0;
+document.getElementById('kit-knob').onclick=()=>{v=(v+1)%4;document.getElementById('kit-screen').textContent=views[v];[...document.getElementById('kit-dots').children].forEach((d,i)=>d.classList.toggle('is-on',i===v));};
+const m=document.getElementById('kit-meter');for(let i=0;i<25;i++){const s=document.createElement('i');if(i>=22)s.className='is-hot';m.append(s);}
+let t=0;
+function frame(){t++;const level=-30+Math.sin(t/6)*26;const n=Math.round((level+100)/100*25);[...m.children].forEach((s,i)=>s.classList.toggle('is-on',i<n));
+ const c=document.getElementById('kit-trace'),w=c.clientWidth,h=c.clientHeight;if(!w)return;const k=devicePixelRatio||1;c.width=w*k;c.height=h*k;const x=c.getContext('2d');x.scale(k,k);
+ x.strokeStyle=css('--ap-ink');x.lineWidth=1.75;x.lineJoin='round';x.beginPath();let ly=0;
+ for(let i=0;i<=120;i++){const px=w*i/120,val=-46+Math.sin((i+t)/7)*14+Math.sin((i+t)/2.3)*4,py=3+(h-6)*(-val)/100;i?x.lineTo(px,py):x.moveTo(px,py);ly=py;}
+ x.stroke();x.fillStyle=css('--ap-accent');x.beginPath();x.arc(w-4,ly,3.5,0,Math.PI*2);x.fill();}
+setKT(ktv);
+frame();
+if(!matchMedia('(prefers-reduced-motion: reduce)').matches)setInterval(frame,1000);
+addEventListener('resize',frame);
+</script></body></html>

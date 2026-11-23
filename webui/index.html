@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark"><link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2020%2020%22%20width=%2220%22%20height=%2220%22%3E%3Ctitle%3EAphelion%3C/title%3E%3Cstyle%3Esvg%7Bcolor:%23141414;--a:%23FF5000%7D@media(prefers-color-scheme:dark)%7Bsvg%7Bcolor:%23EDEDE9;--a:%23FF5A1A%7D%7D.ap-s%7Bfill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round%7D.ap-acc%7Bfill:var(--a)%7D%3C/style%3E%3Cpath%20class=%22ap-s%22%20d=%22M4.5%2014.5A8.2%204.6%20-35%201%201%2015.5%205.5A8.2%204.6%20-35%201%201%204.5%2014.5Z%22/%3E%3Ccircle%20class=%22ap-acc%22%20cx=%2215.5%22%20cy=%225.5%22%20r=%222.5%22/%3E%3C/svg%3E"><script>(function(){try{var m=localStorage.getItem("aphelion.theme")||"auto";if(m==="dark"||m==="light")document.documentElement.dataset.theme=m;}catch(e){}})();</script><title>Aphelion · 传感器终端</title>
+<style>
+/* ==========================================================================
+   Aphelion UI 1.4 · 仪器面板设计语言
+   单文件样式库。所有类名以 ap- 开头，所有令牌以 --ap- 开头。
+   不依赖外部字体、图片或脚本，可随固件离线提供。
+   ========================================================================== */
+
+/* ---------- 1. 令牌 ---------- */
+:root{
+  /* 颜色 · 机身与面板 */
+  --ap-bg:#e2e2de;          /* 机身：页面底色 */
+  --ap-panel:#f2f2ef;       /* 面板：一切内容的承载面 */
+  --ap-panel-hover:#e9e9e5; /* 面板悬停 */
+  --ap-line:#cbcbc5;        /* 结构线：面板分隔、外框 */
+  --ap-off:#d9d9d3;         /* 未点亮：轨道、电平空段、列表细线 */
+  --ap-off-hover:#cfcfc9;
+  /* 颜色 · 文字 */
+  --ap-ink:#141414;         /* 主文字、主按钮 */
+  --ap-readout:#141414;     /* 读数 XL / L 数字 */
+  --ap-readout-w:250;
+  --ap-ink-2:#3d3d39;       /* 次级正文 */
+  --ap-muted:#62625c;       /* 标签、单位、说明 */
+  --ap-faint:#9a9a94;       /* 仅用于禁用 */
+  /* 颜色 · 强调与状态 */
+  --ap-accent:#ff5000;      /* 唯一强调色：实体按键、最新数据点、削峰 */
+  --ap-focus:#d64300;       /* 焦点环专用（三背景 >= 3:1） */
+  --ap-accent-ink:#b23a00;  /* 强调色的文字版本：错误与演示标记 */
+  --ap-ok:#178a3b;          /* 仅用于在线状态灯（三背景 >= 3:1） */
+  --ap-ok-glow:rgba(23,138,59,.2);
+  --ap-live-glow:rgba(255,80,0,.22);
+  --ap-on-ink:#ffffff;
+  --ap-ink-hover:#000000;
+  --ap-on-accent:#ffffff;
+  --ap-danger-bg:rgba(178,58,0,.08);
+  --ap-switch-knob:#ffffff;
+  --ap-knob-hi:#ffffff;
+  --ap-press:rgba(0,0,0,.2);
+  --ap-t-press:80ms;
+  /* 颜色 · 表单 */
+  --ap-field:#ffffff;
+  --ap-field-line:#8a8a83;
+  /* 颜色 · 仿真屏 */
+  --ap-screen:#0c0c0c;
+  --ap-screen-bezel:#262626;
+  --ap-screen-ink:#eef3ff;
+  --ap-screen-dim:#3a3a3a;
+
+  /* 字体 · 仅系统字体 */
+  --ap-sans:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",Roboto,system-ui,sans-serif;
+  --ap-mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,"PingFang SC",monospace;
+
+  /* 间距 · 4 px 基准 */
+  --ap-s1:4px;--ap-s2:8px;--ap-s3:12px;--ap-s4:16px;--ap-s5:20px;--ap-s6:24px;--ap-s7:32px;--ap-s8:48px;
+  --ap-pad:clamp(18px,3vw,30px); /* 面板内边距 */
+
+  /* 圆角 */
+  --ap-r-board:18px;  /* 面板外框 */
+  --ap-r-ctl:10px;    /* 输入框、列表悬停、仿真屏 */
+  --ap-r-s:4px;       /* 横幅 */
+  --ap-r-seg:2px;     /* 电平段、信号格 */
+  --ap-r-pill:999px;  /* 按钮、分段、徽标、开关 */
+
+  /* 动效 */
+  --ap-t-fast:.15s;   /* 悬停、颜色 */
+  --ap-t:.2s;         /* 状态切换 */
+  --ap-t-fill:.6s;    /* 数值填充 */
+  --ap-ease:cubic-bezier(.2,.7,.2,1);
+
+  /* 尺寸 */
+  --ap-max:1080px;
+  --ap-touch:44px;
+
+  font-family:var(--ap-sans);color:var(--ap-ink);background:var(--ap-bg);
+  font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;
+}
+
+/* ---------- 2. 基础 ---------- */
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;min-height:100vh}
+h1,h2,h3,h4,p,dl,dt,dd,ul,ol,figure{margin:0}
+ul,ol{padding:0;list-style:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--ap-focus);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+
+/* ---------- 3. 文字 ---------- */
+.ap-title-2xl{font-size:clamp(36px,6vw,64px);font-weight:700;letter-spacing:-.04em;line-height:1.05}
+.ap-title-xl{font-size:clamp(30px,4.6vw,48px);font-weight:700;letter-spacing:-.03em;line-height:1.1}
+.ap-title-l{font-size:clamp(22px,3vw,28px);font-weight:600;letter-spacing:-.01em;line-height:1.3;overflow-wrap:anywhere}
+.ap-title-m{font-size:clamp(20px,2.4vw,24px);font-weight:650;letter-spacing:-.02em;line-height:1.25}
+.ap-label{font-size:14px;font-weight:600;line-height:1.4}
+.ap-small{font-size:14px}
+.ap-caption{font-size:13px;color:var(--ap-muted)}
+.ap-meta{font:12px/1.4 var(--ap-mono);color:var(--ap-muted)}
+.ap-micro{font:11px/1.4 var(--ap-mono);color:var(--ap-muted)}
+.ap-muted{color:var(--ap-muted)}
+.ap-ink-2{color:var(--ap-ink-2)}
+.ap-mono{font-family:var(--ap-mono)}
+.ap-num{font-variant-numeric:tabular-nums}
+.ap-measure{max-width:60ch}
+.ap-code{font:14px var(--ap-mono);color:var(--ap-ink);border-bottom:1px solid var(--ap-ink)}
+.ap-url{font:14px var(--ap-mono);text-decoration:none;border-bottom:1px solid var(--ap-ink);overflow-wrap:anywhere;align-self:flex-start}
+.ap-url:hover{border-bottom-width:2px}
+
+/* ---------- 4. 间距工具 ---------- */
+.ap-mt-1{margin-top:4px}.ap-mt-2{margin-top:8px}.ap-mt-3{margin-top:12px}.ap-mt-4{margin-top:16px}
+.ap-mt-5{margin-top:20px}.ap-mt-6{margin-top:24px}.ap-mt-7{margin-top:32px}.ap-mt-8{margin-top:48px}
+.ap-pt-5{padding-top:20px}.ap-pt-6{padding-top:24px}.ap-pt-7{padding-top:32px}
+.ap-push{margin-top:auto}
+.ap-hide-empty:empty{display:none}
+.ap-stack{display:flex;flex-direction:column}
+.ap-between{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.ap-pair{display:flex;align-items:flex-end;justify-content:space-between;gap:12px 24px;flex-wrap:wrap}
+.ap-right{text-align:right}.ap-right .ap-readout{justify-content:flex-end}
+
+/* ---------- 5. 外框与顶栏 ---------- */
+.ap-wrap{max-width:var(--ap-max);margin:0 auto;padding:0 clamp(14px,4vw,40px)}
+.ap-main{padding-bottom:48px}
+.ap-top{display:flex;align-items:center;gap:12px 20px;flex-wrap:wrap;padding-top:20px;padding-bottom:20px}
+.ap-brand{display:flex;align-items:baseline;gap:8px;margin-right:auto;min-width:0}
+.ap-brand b{font-size:22px;font-weight:800;letter-spacing:-.03em}
+.ap-brand span{font:12px var(--ap-mono);color:var(--ap-muted);white-space:nowrap}
+.ap-actions{display:flex;align-items:center;gap:8px}
+.ap-actions .ap-lamp{margin-left:8px}
+@media (max-width:600px){
+  .ap-top{padding-top:16px;padding-bottom:16px}
+  .ap-top .ap-seg{order:3;width:100%}
+  .ap-top .ap-seg button{flex:1}
+}
+
+/* 分段导航 */
+.ap-seg{display:inline-flex;background:var(--ap-off);border-radius:var(--ap-r-pill);padding:3px}
+.ap-seg button{border:0;background:none;border-radius:var(--ap-r-pill);min-height:38px;padding:0 18px;font-size:14px;font-weight:600;color:var(--ap-ink-2);white-space:nowrap;transition:background var(--ap-t),color var(--ap-t)}
+.ap-seg button:hover{color:var(--ap-ink)}
+.ap-seg button[aria-pressed=true]{background:var(--ap-ink);color:#fff}
+
+/* 圆形图标按钮 */
+.ap-iconbtn{flex:none;width:var(--ap-touch);height:var(--ap-touch);border:0;border-radius:50%;background:var(--ap-off);color:var(--ap-ink);display:grid;place-items:center;transition:background var(--ap-t),color var(--ap-t)}
+.ap-iconbtn:hover{background:var(--ap-off-hover)}
+.ap-iconbtn[aria-pressed=true]{background:var(--ap-ink);color:#fff}
+.ap-iconbtn svg{width:18px;height:18px;display:block}
+.ap-icon *{fill:currentColor}
+.ap-icon .ap-acc{fill:var(--ap-accent)}
+
+/* 状态灯 */
+.ap-lamp{display:inline-flex;align-items:center;gap:8px;font:12px var(--ap-mono);color:var(--ap-muted);white-space:nowrap}
+.ap-lamp::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--ap-accent)}
+.ap-lamp.is-on::before{background:var(--ap-ok);box-shadow:0 0 0 3px rgba(31,170,74,.2)}
+.ap-lamp.is-idle::before{background:var(--ap-faint)}
+
+/* 横幅 */
+.ap-banner{margin-bottom:12px;padding:12px 16px;background:var(--ap-panel);border-left:3px solid var(--ap-accent);border-radius:var(--ap-r-s);font-size:14px}
+
+/* ---------- 6. 面板 ---------- */
+.ap-board{display:flex;flex-wrap:wrap;gap:1px;background:var(--ap-line);border:1px solid var(--ap-line);border-radius:var(--ap-r-board);overflow:hidden}
+.ap-board+.ap-board{margin-top:16px}
+.ap-tile{--w:12;flex:1 1 calc(var(--w) / 12 * 100% - 1px);min-width:0;background:var(--ap-panel);padding:var(--ap-pad);display:flex;flex-direction:column}
+.ap-w3{--w:3}.ap-w4{--w:4}.ap-w5{--w:5}.ap-w6{--w:6}.ap-w7{--w:7}.ap-w8{--w:8}.ap-w9{--w:9}.ap-w12{--w:12}
+@media (max-width:780px){.ap-tile{--w:12}.ap-tile.ap-m6{--w:6}}
+@media (max-width:600px){.ap-board{border-radius:14px}}
+
+/* 面板头 */
+.ap-tag{display:flex;justify-content:space-between;align-items:baseline;gap:4px 12px;flex-wrap:wrap;font:12px/1.4 var(--ap-mono);color:var(--ap-muted)}
+.ap-tag--start{justify-content:flex-start}
+.ap-tag>h1,.ap-tag>h2,.ap-tag>h3,.ap-tag>strong{font:600 14px/1.4 var(--ap-sans);color:var(--ap-ink)}
+
+/* 分组标题（面板之间） */
+.ap-group{display:flex;justify-content:space-between;gap:4px 12px;flex-wrap:wrap;margin:32px 4px 12px;font:12px/1.4 var(--ap-mono);color:var(--ap-muted)}
+.ap-group>:first-child{font:600 14px/1.4 var(--ap-sans);color:var(--ap-ink)}
+
+/* 空状态 */
+.ap-empty{align-items:flex-start;gap:12px;padding-top:48px;padding-bottom:48px}
+
+/* 左右分栏 */
+.ap-split{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:24px 48px;align-items:start}
+@media (max-width:780px){.ap-split{grid-template-columns:1fr}}
+
+/* 面板底部操作区 */
+.ap-foot{display:flex;align-items:center;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;padding-top:24px;border-top:1px solid var(--ap-line)}
+
+/* ---------- 7. 读数 ---------- */
+.ap-readout{display:flex;align-items:flex-start;gap:4px;font-variant-numeric:tabular-nums}
+.ap-readout>strong{font-weight:250;letter-spacing:-.06em;line-height:.86;font-size:clamp(92px,17vw,184px)}
+.ap-readout>span{font-size:clamp(17px,2.2vw,24px);font-weight:500;color:var(--ap-muted);margin-top:.25em;white-space:nowrap}
+.ap-readout--l>strong{font-size:clamp(64px,9.5vw,104px);font-weight:300}
+.ap-readout--m{align-items:baseline}
+.ap-readout--m>strong{font-size:clamp(30px,4vw,42px);font-weight:400;letter-spacing:-.04em;line-height:1}
+.ap-readout--m>span{font-size:14px;margin:0}
+.ap-readout--mono>strong{font-family:var(--ap-mono);font-weight:400;letter-spacing:-.02em}
+
+/* 填充条 */
+.ap-bar{height:6px;background:var(--ap-off);border-radius:3px;overflow:hidden}
+.ap-bar>i{display:block;height:100%;width:0;background:var(--ap-ink);border-radius:3px;transition:width var(--ap-t-fill) var(--ap-ease)}
+.ap-scale{display:flex;justify-content:space-between;gap:8px;margin-top:6px;font:11px/1.4 var(--ap-mono);color:var(--ap-muted)}
+
+/* 分段电平表 */
+.ap-meter{display:grid;grid-template-columns:repeat(var(--n,25),minmax(0,1fr));gap:3px;height:16px}
+.ap-meter>i{background:var(--ap-off);border-radius:var(--ap-r-seg);transition:background .12s}
+.ap-meter>i.is-on{background:var(--ap-ink)}
+.ap-meter>i.is-hot.is-on{background:var(--ap-accent)}
+
+/* 曲线画布 */
+.ap-trace{display:block;width:100%;height:84px;border-bottom:1px solid var(--ap-line);
+  background:repeating-linear-gradient(to right,transparent 0 calc(16.666% - 1px),var(--ap-off) calc(16.666% - 1px) 16.666%)}
+
+/* 信号格 */
+.ap-signal{display:inline-flex;align-items:flex-end;gap:2px;height:13px}
+.ap-signal>i{width:3px;border-radius:1px;background:var(--ap-line)}
+.ap-signal>i:nth-child(1){height:5px}.ap-signal>i:nth-child(2){height:9px}.ap-signal>i:nth-child(3){height:13px}
+.ap-signal[data-level="1"]>i:nth-child(-n+1),.ap-signal[data-level="2"]>i:nth-child(-n+2),.ap-signal[data-level="3"]>i{background:var(--ap-ink)}
+
+/* 仿真屏 */
+.ap-screen{width:100%;max-width:440px;aspect-ratio:2/1;background:var(--ap-screen);border:5px solid var(--ap-screen-bezel);border-radius:var(--ap-r-ctl);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--ap-screen-ink);padding:12px}
+.ap-screen__text{font:500 clamp(17px,2.2vw,21px)/1.2 var(--ap-mono);letter-spacing:.04em;text-align:center}
+.ap-dots{display:flex;gap:6px}
+.ap-dots>i{width:5px;height:5px;border-radius:50%;background:var(--ap-screen-dim)}
+.ap-dots>i.is-on{background:var(--ap-screen-ink)}
+
+/* ---------- 8. 按钮 ---------- */
+.ap-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:var(--ap-touch);border:0;border-radius:var(--ap-r-pill);background:var(--ap-ink);color:#fff;padding:0 28px;font-size:16px;font-weight:600;white-space:nowrap;align-self:flex-start;transition:background var(--ap-t-fast)}
+.ap-btn:hover:not(:disabled){background:#000}
+.ap-btn--quiet{background:var(--ap-off);color:var(--ap-ink)}
+.ap-btn--quiet:hover:not(:disabled){background:var(--ap-off-hover)}
+.ap-btn--danger{background:transparent;color:var(--ap-accent-ink);box-shadow:inset 0 0 0 1px currentColor}
+.ap-btn--danger:hover:not(:disabled){background:rgba(178,58,0,.08)}
+.ap-btn--s{min-height:36px;padding:0 18px;font-size:14px}
+.ap-btn:disabled{opacity:.4;cursor:not-allowed}
+.ap-btn.is-busy{opacity:.6;cursor:wait}
+
+/* 文字按钮 */
+.ap-link{background:none;border:0;padding:6px 0;font-size:14px;font-weight:600;text-align:left;align-self:flex-start;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--ap-line)}
+.ap-link:hover{text-decoration-color:var(--ap-ink)}
+.ap-link:disabled{color:var(--ap-muted);cursor:wait}
+
+/* 实体按键 */
+.ap-knob{display:flex;align-items:center;gap:16px;background:none;border:0;padding:0;font-size:16px;font-weight:600;text-align:left;align-self:flex-start}
+.ap-knob::before{content:"";flex:none;width:52px;height:52px;border-radius:50%;background:var(--ap-accent);box-shadow:inset 0 -4px 0 rgba(0,0,0,.2),0 1px 0 #fff;transition:transform .08s}
+.ap-knob:active:not(:disabled)::before{transform:translateY(2px);box-shadow:inset 0 -1px 0 rgba(0,0,0,.2)}
+.ap-knob:disabled{opacity:.4;cursor:not-allowed}
+
+/* 开关 */
+.ap-switch{position:relative;flex:none;width:48px;height:28px;border:0;padding:0;border-radius:var(--ap-r-pill);background:var(--ap-field-line);transition:background var(--ap-t)}
+.ap-switch::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform var(--ap-t) var(--ap-ease)}
+.ap-switch[aria-checked=true]{background:var(--ap-ink)}
+.ap-switch[aria-checked=true]::after{transform:translateX(20px)}
+.ap-switch:disabled{opacity:.4;cursor:not-allowed}
+
+/* ---------- 9. 表单 ---------- */
+.ap-field{display:flex;flex-direction:column;gap:6px;max-width:420px}
+.ap-field>label{font-size:13px;font-weight:600}
+.ap-hint{font-size:13px;color:var(--ap-muted)}
+.ap-input,.ap-select{width:100%;min-height:var(--ap-touch);padding:10px 14px;border:1px solid var(--ap-field-line);border-radius:var(--ap-r-ctl);background:var(--ap-field);transition:border-color var(--ap-t-fast)}
+.ap-input:focus,.ap-select:focus{border-color:var(--ap-ink)}
+.ap-select{appearance:none;-webkit-appearance:none;padding-right:40px;cursor:pointer;
+  background:var(--ap-field) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23141414' stroke-width='1.75'/%3E%3C/svg%3E") no-repeat right 14px center}
+.ap-input:disabled,.ap-select:disabled{color:var(--ap-faint);cursor:not-allowed}
+.ap-field.is-invalid .ap-input{border-color:var(--ap-accent-ink)}
+.ap-field.is-invalid .ap-hint{color:var(--ap-accent-ink)}
+
+/* 状态文字 */
+.ap-status{font-size:14px;min-height:1.5em}
+.ap-status.is-error{color:var(--ap-accent-ink)}
+
+/* ---------- 10. 列表与信息 ---------- */
+.ap-list>li+li{border-top:1px solid var(--ap-off)}
+.ap-item{width:calc(100% + 24px);margin:0 -12px;min-height:52px;padding:12px;background:transparent;border:0;border-radius:var(--ap-r-ctl);display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;transition:background var(--ap-t-fast)}
+.ap-item:hover:not(:disabled),.ap-item:focus-visible{background:var(--ap-panel-hover)}
+.ap-item:disabled{color:var(--ap-faint);cursor:default}
+.ap-item:disabled .ap-signal>i{background:var(--ap-off)}
+.ap-item>strong{font-weight:600;overflow-wrap:anywhere;min-width:0}
+.ap-item__meta{display:inline-flex;align-items:center;gap:12px;flex:none}
+.ap-item__meta>small{font:12px var(--ap-mono);color:var(--ap-muted);white-space:nowrap}
+
+/* 设置行 */
+.ap-setting{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0}
+.ap-setting+.ap-setting{border-top:1px solid var(--ap-off)}
+.ap-setting__text{min-width:0}
+.ap-setting__text>strong{display:block;font-weight:600}
+.ap-setting__text>span{display:block;font-size:13px;color:var(--ap-muted);margin-top:2px}
+
+/* 键值表 */
+.ap-kv{border-top:1px solid var(--ap-line)}
+.ap-kv>div{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--ap-off);font-size:14px}
+.ap-kv dt{flex:none}
+.ap-kv dd{font-family:var(--ap-mono);color:var(--ap-muted);text-align:right;overflow-wrap:anywhere;min-width:0}
+
+/* 徽标 */
+.ap-badge{display:inline-flex;align-items:center;height:20px;padding:0 8px;border:1px solid var(--ap-line);border-radius:var(--ap-r-pill);font:11px/1 var(--ap-mono);color:var(--ap-muted);white-space:nowrap}
+.ap-badge--ink{background:var(--ap-ink);border-color:var(--ap-ink);color:#fff}
+.ap-badge--demo{border-color:var(--ap-accent-ink);color:var(--ap-accent-ink)}
+
+/* 工具卡 */
+.ap-tool{border:0;border-radius:0;font:inherit;color:inherit;text-align:left;gap:6px;min-height:220px;transition:background var(--ap-t-fast)}
+.ap-tool:hover,.ap-tool:focus-visible{background:var(--ap-panel-hover)}
+.ap-tool:focus-visible{outline-offset:-4px}
+.ap-tool__phase{display:flex;justify-content:space-between;font:11px/1.4 var(--ap-mono);color:var(--ap-muted)}
+.ap-tool__phase i{font-style:normal;transition:transform var(--ap-t)}
+.ap-tool:hover .ap-tool__phase i{transform:translateX(3px)}
+.ap-tool__glyph{display:block;width:132px;height:40px;margin:20px 0 auto;fill:none;stroke:var(--ap-ink);stroke-width:1.75;stroke-linejoin:round;stroke-linecap:round}
+.ap-tool__glyph .f{fill:var(--ap-ink);stroke:none}
+.ap-tool__glyph .o{fill:var(--ap-accent);stroke:none}
+.ap-tool__glyph .os{stroke:var(--ap-accent);stroke-width:2}
+.ap-tool__glyph .h{stroke-width:1.2;opacity:.35}
+.ap-tool__name{font-size:clamp(20px,2.4vw,24px);font-weight:650;letter-spacing:-.02em;line-height:1.25;margin-top:16px}
+.ap-tool__spec{font:12px/1.4 var(--ap-mono);color:var(--ap-muted)}
+.ap-tool__desc{font-size:14px;color:var(--ap-ink-2);max-width:44ch}
+.ap-tool--compact{min-height:150px}
+.ap-tool--compact .ap-tool__name{margin-top:auto;padding-top:24px}
+@media (max-width:780px){.ap-tool{min-height:0}.ap-tool--compact{min-height:120px}.ap-tool--compact .ap-tool__desc{display:none}}
+
+/* 深色主题 · 1.4 令牌 */
+:root[data-theme="dark"]{
+  --ap-bg:#0e0e0d;--ap-panel:#181817;--ap-panel-hover:#21211f;
+  --ap-line:#33332f;--ap-off:#2a2a27;--ap-off-hover:#363632;
+  --ap-ink:#edede9;--ap-readout:#dadad4;--ap-readout-w:300;--ap-ink-2:#c4c4bd;--ap-muted:#96968e;--ap-faint:#5e5e58;
+  --ap-accent:#ff5a1a;--ap-focus:#ff5a1a;--ap-accent-ink:#ff8550;
+  --ap-ok:#34c45e;--ap-ok-glow:rgba(52,196,94,.25);--ap-live-glow:rgba(255,90,26,.28);
+  --ap-on-ink:#141414;--ap-ink-hover:#ffffff;--ap-on-accent:#141414;--ap-danger-bg:rgba(255,133,80,.12);
+  --ap-field:#111110;--ap-field-line:#76766f;--ap-switch-knob:#d6d6d0;
+  --ap-knob-hi:rgba(255,255,255,.06);--ap-press:rgba(0,0,0,.45);
+  --ap-screen:#000000;--ap-screen-bezel:#34342f;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ap-bg:#0e0e0d;--ap-panel:#181817;--ap-panel-hover:#21211f;
+  --ap-line:#33332f;--ap-off:#2a2a27;--ap-off-hover:#363632;
+  --ap-ink:#edede9;--ap-readout:#dadad4;--ap-readout-w:300;--ap-ink-2:#c4c4bd;--ap-muted:#96968e;--ap-faint:#5e5e58;
+  --ap-accent:#ff5a1a;--ap-focus:#ff5a1a;--ap-accent-ink:#ff8550;
+  --ap-ok:#34c45e;--ap-ok-glow:rgba(52,196,94,.25);--ap-live-glow:rgba(255,90,26,.28);
+  --ap-on-ink:#141414;--ap-ink-hover:#ffffff;--ap-on-accent:#141414;--ap-danger-bg:rgba(255,133,80,.12);
+  --ap-field:#111110;--ap-field-line:#76766f;--ap-switch-knob:#d6d6d0;
+  --ap-knob-hi:rgba(255,255,255,.06);--ap-press:rgba(0,0,0,.45);
+  --ap-screen:#000000;--ap-screen-bezel:#34342f;
+}}
+
+/* ---------- Aphelion UI 1.4 补充样式 ---------- */
+.ap-brand b{font-weight:700;letter-spacing:-.01em}
+.ap-readout{font-variant-numeric:tabular-nums slashed-zero}
+.ap-readout>strong{color:var(--ap-readout);min-width:2ch}
+.ap-readout>strong{font-weight:var(--ap-readout-w)}
+.ap-readout--mono>strong{font-variant-numeric:tabular-nums}
+.ap-lamp::before{background:transparent;border:1.5px solid var(--ap-ink);box-sizing:border-box}
+.ap-lamp.is-on::before{border:0;background:var(--ap-ok);box-shadow:0 0 0 3px var(--ap-ok-glow)}
+.ap-lamp.is-live::before{border:0;background:var(--ap-accent);box-shadow:0 0 0 3px var(--ap-live-glow)}
+.ap-lamp.is-idle::before{border:0;background:var(--ap-faint);box-shadow:none}
+.ap-mark--corner{position:relative}
+.ap-mark--corner::before,.ap-mark--corner::after{content:"";position:absolute;width:6px;height:6px;pointer-events:none;border-color:var(--ap-line);border-style:solid}
+.ap-mark--corner::before{top:8px;left:8px;border-width:1px 0 0 1px}
+.ap-mark--corner::after{bottom:8px;right:8px;border-width:0 1px 1px 0}
+.ap-mark--ruler{height:6px;margin-top:8px;border-bottom:1px solid var(--ap-off);background:repeating-linear-gradient(to right,var(--ap-off) 0 1px,transparent 1px 8px) left bottom/100% 3px no-repeat,repeating-linear-gradient(to right,var(--ap-line) 0 1px,transparent 1px 40px) left bottom/100% 6px no-repeat}
+.ap-mark--index{font:11px var(--ap-mono);color:var(--ap-muted);margin-right:8px}
+.ap-spark{display:inline-block;vertical-align:middle;height:24px;width:72px}
+.ap-qr{display:inline-flex;flex-direction:column;align-items:center;gap:8px}
+.ap-qr__box{background:#ffffff;padding:12px;border:1px solid var(--ap-line);border-radius:var(--ap-r-ctl);line-height:0}
+
+</style></head>
+<body>
+<header class="ap-wrap ap-top"><div class="ap-brand"><b>Aphelion</b><span>传感器终端</span></div>
+<nav class="ap-seg" aria-label="页面"><button id="monitor-tab" aria-controls="monitor" aria-pressed="true">传感器</button><button id="wifi-tab" aria-controls="wifi" aria-pressed="false">Wi‑Fi 接入</button></nav>
+<div class="ap-actions">
+<button id="tools-tab" class="ap-iconbtn" type="button" data-feature="tools" aria-controls="tools" aria-pressed="false" aria-label="工具箱" title="工具箱"><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="2" width="7" height="7" rx="1.6"></rect><rect x="11" y="2" width="7" height="7" rx="1.6"></rect><rect x="2" y="11" width="7" height="7" rx="1.6"></rect><rect class="ap-acc" x="11" y="11" width="7" height="7" rx="3.5"></rect></svg></button>
+<button id="settings-tab" class="ap-iconbtn" type="button" aria-controls="settings" aria-pressed="false" aria-label="系统设置" title="系统设置"><svg class="ap-icon" viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="4" width="16" height="2" rx="1"></rect><rect x="2" y="9" width="16" height="2" rx="1"></rect><rect x="2" y="14" width="16" height="2" rx="1"></rect><circle cx="13" cy="5" r="2.6"></circle><circle class="ap-acc" cx="7" cy="10" r="2.6"></circle><circle cx="12" cy="15" r="2.6"></circle></svg></button>
+<span id="live" class="ap-lamp" role="status">正在读取</span></div></header>
+
+<main class="ap-wrap ap-main">
+<p id="offline" class="ap-banner" role="status" hidden="">无法读取设备，正在重试。</p>
+
+<section id="monitor" aria-label="传感器"><div class="ap-board">
+<article class="ap-tile ap-w7" data-feature="env"><div class="ap-tag"><h2>温度</h2><span>SHT40 · <span id="environment">等待读数</span></span></div>
+<div class="ap-readout ap-push ap-pt-7"><strong id="temperature">—</strong><span>°C</span></div></article>
+
+<article class="ap-tile ap-w5" data-feature="env"><div class="ap-tag"><h2>相对湿度</h2><span>SHT40</span></div>
+<div class="ap-readout ap-readout--l ap-push ap-pt-7"><strong id="humidity">—</strong><span>%RH</span></div>
+<div class="ap-bar ap-mt-5" aria-hidden="true"><i id="hum-bar"></i></div><div class="ap-scale" aria-hidden="true"><span>0</span><span>50</span><span>100</span></div></article>
+
+<article class="ap-tile ap-w8" data-feature="sound"><div class="ap-tag"><h2>声音</h2><span>INMP441 · <span id="sound">等待读数</span></span></div>
+<div class="ap-pair ap-pt-6"><div><div class="ap-readout ap-readout--l"><strong id="spl">—</strong><span>dB SPL</span></div><p class="ap-caption ap-mt-3">估算声压级</p></div>
+<div class="ap-right"><div class="ap-readout ap-readout--m"><strong id="dbfs">—</strong><span>dBFS</span></div><p class="ap-caption ap-mt-3">数字电平</p></div></div>
+<div class="ap-meter ap-mt-5" id="meter" aria-hidden="true"></div>
+<canvas class="ap-trace ap-mt-4" id="trace" aria-label="近 60 秒数字电平趋势，范围 −100 至 0 dBFS"></canvas>
+<div class="ap-scale" aria-hidden="true"><span>−60 s</span><span>近 60 秒 · −100 至 0 dBFS</span><span>现在</span></div></article>
+
+<article class="ap-tile ap-w4" data-feature="oled" aria-label="OLED 控制"><div class="ap-tag"><h2>OLED 屏幕</h2><span>当前页面</span></div>
+<div class="ap-screen ap-mt-5"><p class="ap-screen__text" id="oled-view" role="status">读取中</p><div class="ap-dots" id="oled-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div></div>
+<button id="oled-button" class="ap-knob ap-mt-5" type="button" disabled="">切换 OLED 页面</button>
+<p id="oled-feedback" class="ap-status is-error ap-mt-3" role="status" hidden=""></p></article>
+
+<article class="ap-tile ap-empty" id="monitor-empty" hidden=""><p class="ap-title-l">传感器面板已全部关闭</p><p class="ap-caption">在系统设置的「功能开关」里可以重新开启。</p>
+<button class="ap-btn ap-btn--quiet ap-btn--s" type="button" id="open-settings">打开系统设置</button></article>
+</div></section>
+
+<section id="wifi" aria-label="Wi‑Fi 接入" hidden=""><div class="ap-board">
+<article class="ap-tile ap-w5"><div class="ap-tag"><h1>网络连接</h1><span>路由器状态</span></div>
+<p id="network-state" class="ap-title-l ap-mt-7" role="status">正在读取</p><a id="address" class="ap-url ap-mt-3" hidden=""></a>
+<p id="setup-note" class="ap-caption ap-push ap-pt-7 ap-hide-empty"></p></article>
+
+<article class="ap-tile ap-w7">
+<p class="ap-small ap-muted" id="idle" hidden="">设备已接入网络。如需更换路由器，请按左侧说明进入配网模式。</p>
+<div id="picker" hidden=""><div class="ap-between"><div class="ap-tag ap-tag--start"><h2>附近的 Wi‑Fi</h2><span>仅 2.4 GHz</span></div><button class="ap-link" id="rescan" type="button">重新扫描</button></div>
+<p id="scan-state" class="ap-meta ap-mt-3" role="status"></p><ul id="net-list" class="ap-list ap-mt-2"></ul><button type="button" id="other" class="ap-link ap-mt-2">其他网络…</button></div>
+
+<form id="join" class="ap-stack" hidden=""><button type="button" class="ap-link" id="back-list">‹ 返回网络列表</button><h2 id="chosen" class="ap-title-l ap-mt-4"></h2>
+<div class="ap-field ap-mt-5" id="manual" hidden=""><label for="ssid">隐藏网络名称</label><input class="ap-input" id="ssid" name="ssid" maxlength="32" autocomplete="off" autocapitalize="none" spellcheck="false"></div>
+<div class="ap-field ap-mt-5" id="pass-row"><label for="password">Wi‑Fi 密码</label><input class="ap-input" id="password" name="password" type="password" maxlength="64" autocomplete="off"><p class="ap-hint" id="open-hint" hidden="">开放网络可留空。</p></div>
+<button id="connect" class="ap-btn ap-mt-6" type="submit">连接</button><p id="feedback" class="ap-status ap-mt-3" role="status"></p></form>
+</article></div></section>
+
+<section id="tools" aria-label="工具箱" hidden="">
+<div id="tool-grid">
+<div class="ap-board"><article class="ap-tile"><div class="ap-tag"><span>工具箱</span><span>10 个工具 · 4 个首版</span></div>
+<h1 class="ap-title-xl ap-mt-6">一块 ESP32‑S3，一个热点，全部工具。</h1>
+<p class="ap-measure ap-muted ap-mt-3">手机或电脑连上设备热点，打开 <code class="ap-code">http://192.168.4.1</code>。网页随固件提供，没有互联网也能使用。波形、扫描结果和状态通过 WebSocket 实时推送。</p>
+<p class="ap-meta ap-mt-5">当前固件尚未提供这些工具，以下为预留入口。</p></article></div>
+<div class="ap-group"><span>首版</span><span>无线工具与实时波形</span></div>
+<div class="ap-board" id="tools-v1"></div>
+<div data-feature="toolsNext"><div class="ap-group"><span>后续版本</span><span>网络 · 电子与总线 · 信号与系统</span></div>
+<div class="ap-board" id="tools-next"></div></div>
+</div>
+<div id="tool-detail" hidden=""><div class="ap-board"><article class="ap-tile ap-split">
+<button type="button" class="ap-link" id="tool-back" style="grid-column: 1 / -1;">‹ 全部工具</button>
+<div><div class="ap-tag"><span id="td-phase"></span><span id="td-spec"></span></div><h2 id="td-name" class="ap-title-2xl ap-mt-4"></h2><p id="td-desc" class="ap-ink-2 ap-measure ap-mt-4"></p></div>
+<dl class="ap-kv" id="td-items"></dl>
+<div class="ap-foot" style="grid-column: 1 / -1;"><p id="td-state" class="ap-small ap-muted" role="status"></p><button type="button" class="ap-btn" id="td-start" disabled="">启动</button></div>
+</article></div></div>
+</section>
+
+<section id="settings" aria-label="系统设置" hidden=""><div class="ap-board">
+<article class="ap-tile"><div class="ap-tag"><span>控制台</span><span>保存在此浏览器</span></div>
+<h1 class="ap-title-xl ap-mt-6">系统设置</h1>
+<p class="ap-measure ap-muted ap-mt-3">功能开关和时区目前只保存在当前浏览器，换一台手机或电脑需要重新设置。固件提供设置接口后，这些选项会同步到设备。</p></article>
+
+<article class="ap-tile ap-w7"><div class="ap-tag"><h2>功能开关</h2><span>控制台显示的模块</span></div>
+<ul class="ap-mt-3" id="feature-list"></ul></article>
+
+<article class="ap-tile ap-w5"><div class="ap-tag"><h2>时区</h2><span>浏览器时钟</span></div>
+<div class="ap-readout ap-readout--m ap-readout--mono ap-pt-7"><strong id="clock">--:--:--</strong></div>
+<p class="ap-caption ap-mt-2" id="clock-meta"></p>
+<div class="ap-field ap-push ap-pt-7"><label for="tz">显示时区</label><select class="ap-select" id="tz"></select>
+<p class="ap-hint">OLED 时钟页使用设备自己的时间，固件提供校时接口后才能同步。</p></div></article>
+
+<article class="ap-tile"><div class="ap-tag"><h2>关于</h2><span id="about-ui"></span></div>
+<div class="ap-split ap-mt-6"><div><p class="ap-title-2xl">Aphelion</p>
+<p class="ap-measure ap-ink-2 ap-mt-4">基于 ESP32‑S3 的传感器终端与裸板工具箱。网页、脚本和样式随固件提供，连上设备热点即可离线使用。</p></div>
+<dl class="ap-kv" id="about"></dl></div>
+<p class="ap-caption ap-mt-5">「—」表示当前固件没有提供这一项。</p></article>
+</div></section>
+</main>
+<script>
+'use strict';
+const UI_VERSION = '1.0';
+const el = id => document.getElementById(id);
+const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+let setup=false, selected=null, scanning=false, lastScan=0, connectedId='', lastData=null;
+const ssidText = hex => new TextDecoder().decode(Uint8Array.from((hex||'').match(/../g)||[], b=>parseInt(b,16)));
+
+/* ── 设置（保存在浏览器） ───────────────────────────── */
+const SETTINGS_KEY = 'aphelion.settings';
+const DEFAULTS = {oled:true, env:true, sound:true, tools:true, toolsNext:true, tz:'auto'};
+const FEATURES = [
+  ['oled','OLED 屏幕控制','在传感器页显示 OLED 页面切换'],
+  ['env','温湿度','SHT40 温度和湿度读数'],
+  ['sound','声音','INMP441 电平表和 60 秒曲线'],
+  ['tools','工具箱入口','在顶栏显示工具箱按钮'],
+  ['toolsNext','后续工具','在工具箱中列出尚未提供的工具']
+];
+const ZONES = [['Asia/Hong_Kong','香港'],['Asia/Shanghai','上海'],['Asia/Taipei','台北'],['Asia/Singapore','新加坡'],['Asia/Tokyo','东京'],['Asia/Seoul','首尔'],['Asia/Kolkata','新德里'],['Asia/Dubai','迪拜'],['Europe/London','伦敦'],['Europe/Berlin','柏林'],['America/New_York','纽约'],['America/Los_Angeles','洛杉矶'],['Australia/Sydney','悉尼'],['UTC','UTC']];
+let settings = (() => { try { return {...DEFAULTS, ...JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}')}; } catch { return {...DEFAULTS}; } })();
+function saveSettings() { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch {} applySettings(); }
+const browserZone = () => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'; } catch { return 'UTC'; } };
+const zone = () => settings.tz === 'auto' ? browserZone() : settings.tz;
+function offset(tz, now=new Date()) {
+  try {
+    const p = new Intl.DateTimeFormat('en-US',{timeZone:tz,timeZoneName:'shortOffset'}).formatToParts(now).find(x=>x.type==='timeZoneName');
+    return p ? p.value.replace('GMT','UTC').replace(/^UTC$/,'UTC+0') : '';
+  } catch { return ''; }
+}
+function renderSettings() {
+  const list = el('feature-list');
+  for (const [key,name,desc] of FEATURES) {
+    const li=document.createElement('li'), text=document.createElement('div'), t=document.createElement('strong'), s=document.createElement('span'), sw=document.createElement('button');
+    li.className='ap-setting'; text.className='ap-setting__text';
+    t.textContent=name; t.id='feat-'+key; s.textContent=desc; text.append(t,s);
+    sw.type='button'; sw.className='ap-switch'; sw.setAttribute('role','switch'); sw.setAttribute('aria-labelledby','feat-'+key); sw.dataset.key=key;
+    sw.onclick=()=>{ settings[key]=!settings[key]; saveSettings(); };
+    li.append(text,sw); list.append(li);
+  }
+  const tz = el('tz'), auto = document.createElement('option');
+  auto.value='auto'; auto.textContent='跟随浏览器 · '+browserZone(); tz.append(auto);
+  for (const [id,name] of ZONES) { const o=document.createElement('option'); o.value=id; o.textContent=name+' · '+offset(id); tz.append(o); }
+  tz.onchange = () => { settings.tz = tz.value; saveSettings(); };
+  el('about-ui').textContent = 'Aphelion UI ' + UI_VERSION;
+}
+function applySettings() {
+  document.querySelectorAll('[data-feature]').forEach(n => n.hidden = !settings[n.dataset.feature]);
+  document.querySelectorAll('.ap-switch[data-key]').forEach(s => s.setAttribute('aria-checked', String(!!settings[s.dataset.key])));
+  el('monitor-empty').hidden = settings.oled || settings.env || settings.sound;
+  el('tz').value = [...el('tz').options].some(o=>o.value===settings.tz) ? settings.tz : 'auto';
+  if (!settings.tools && page === 'tools') selectPage('monitor');
+  tick(); plot();
+}
+function tick() {
+  if (el('settings').hidden) return;
+  const now = new Date(), tz = zone();
+  try {
+    el('clock').textContent = new Intl.DateTimeFormat('zh-CN',{timeZone:tz,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now);
+    el('clock-meta').textContent = new Intl.DateTimeFormat('zh-CN',{timeZone:tz,month:'long',day:'numeric',weekday:'short'}).format(now) + ' · ' + tz + ' · ' + offset(tz, now);
+  } catch { el('clock').textContent='--:--:--'; el('clock-meta').textContent='浏览器不支持该时区'; }
+}
+setInterval(tick, 1000);
+
+/* ── 关于 ───────────────────────────────────────────── */
+const fmtUptime = s => { if (!Number.isFinite(s)) return ''; const d=Math.floor(s/86400), h=Math.floor(s%86400/3600), m=Math.floor(s%3600/60); return (d?d+' 天 ':'')+(d||h?h+' 小时 ':'')+m+' 分'; };
+const ABOUT = [
+  ['构建配置', x => x?.build || '传感器终端'],
+  ['芯片', () => 'ESP32‑S3'],
+  ['固件版本', x => x?.firmware],
+  ['控制台', () => 'Aphelion UI ' + UI_VERSION],
+  ['设备热点', x => x?.ap],
+  ['局域网地址', x => x?.ip],
+  ['运行时间', x => fmtUptime(x?.uptime)],
+  ['剩余堆内存', x => Number.isFinite(x?.heap) ? Math.round(x.heap/1024)+' KiB' : ''],
+  ['存储', () => '2 MB Flash · 1500 KiB 应用分区']
+];
+function renderAbout() {
+  const dl = el('about');
+  ABOUT.forEach(([k],i) => { const row=document.createElement('div'), dt=document.createElement('dt'), dd=document.createElement('dd'); dt.textContent=k; dd.id='about-'+i; row.append(dt,dd); dl.append(row); });
+  fillAbout(null);
+}
+function fillAbout(data) { ABOUT.forEach(([,f],i) => { el('about-'+i).textContent = f(data) || '—'; }); }
+
+/* ── 页面切换 ───────────────────────────────────────── */
+const PAGES = ['monitor','wifi','tools','settings'];
+let page = 'monitor';
+function selectPage(p) {
+  if (typeof p === 'boolean') p = p ? 'wifi' : 'monitor';
+  if (p === 'tools' && !settings.tools) p = 'monitor';
+  page = p;
+  for (const id of PAGES) { el(id).hidden = id !== p; el(id+'-tab').setAttribute('aria-pressed', String(id === p)); }
+  if (p==='wifi' && setup && !selected && Date.now()-lastScan>15000) scanWifi();
+  if (p==='monitor') plot();
+  if (p==='settings') tick();
+}
+for (const id of PAGES) el(id+'-tab').onclick = () => selectPage(id);
+el('open-settings').onclick = () => selectPage('settings');
+
+/* ── 电平表 ─────────────────────────────────────────── */
+const SEG=25, meterEl=el('meter');
+for (let i=0;i<SEG;i++) { const s=document.createElement('i'); if (i>=SEG-3) s.className='is-hot'; meterEl.append(s); }
+function meter(v) { const n=Number.isFinite(v)?Math.round((Math.max(-100,Math.min(0,v))+100)/100*SEG):0; [...meterEl.children].forEach((s,i)=>s.classList.toggle('is-on',i<n)); }
+
+/* ── OLED ───────────────────────────────────────────── */
+let history = [], first = true, submitting = false;
+const oledNames = {overview:'总览', environment:'温湿度详情', sound:'声音详情', clock:'时钟', setup:'Wi‑Fi 配网'};
+const oledOrder = ['overview','environment','sound','clock'];
+let oledPending = false, oledRevision = 0, oledView = '';
+function showOled(view) {
+  oledView = Object.hasOwn(oledNames, view) ? view : '';
+  el('oled-view').textContent = oledView ? oledNames[oledView] : '读取中';
+  [...el('oled-dots').children].forEach((d,i)=>d.classList.toggle('is-on', oledOrder[i]===oledView));
+  el('oled-button').disabled = oledPending || !oledView || oledView === 'setup';
+}
+el('oled-button').onclick = async () => {
+  if (oledPending || el('oled-button').disabled) return;
+  oledPending = true; ++oledRevision;
+  const feedback = el('oled-feedback'); feedback.hidden = true; showOled(oledView);
+  try {
+    const response = await fetch('/api/button', {method:'POST', headers:{'X-Aphelion':'button'}, signal:AbortSignal.timeout(5000)});
+    if (response.status === 409) { showOled('setup'); return; }
+    if (!response.ok) throw Error();
+    showOled((await response.json()).oled_view);
+  } catch {
+    feedback.textContent = '未能确认切换，页面状态会自动刷新。'; feedback.hidden = false;
+  } finally { oledPending = false; showOled(oledView); }
+};
+
+/* ── 曲线 ───────────────────────────────────────────── */
+function plot() {
+  const canvas = el('trace'), width = canvas.clientWidth, height = canvas.clientHeight;
+  if (!width || !height) return;
+  const scale = window.devicePixelRatio || 1;
+  canvas.width = Math.round(width * scale); canvas.height = Math.round(height * scale);
+  const ctx = canvas.getContext('2d'); ctx.scale(scale,scale);
+  ctx.lineWidth=1.75; ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle=css('--ap-ink'); ctx.beginPath();
+  const end=Date.now(); history=history.filter(p => end-p.at <= 60000);
+  let previous=0, last=null;
+  for (const p of history) {
+    if (p.value === null) { previous=0; continue; }
+    const x=width*(1-(end-p.at)/60000), y=3+(height-6)*Math.min(100,Math.max(0,-p.value))/100;
+    if (!previous || p.at-previous>3500) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    previous=p.at; last={x,y};
+  }
+  ctx.stroke();
+  if (last && end-previous<3500) { ctx.fillStyle=css('--ap-accent'); ctx.beginPath(); ctx.arc(Math.min(last.x,width-4),last.y,3.5,0,Math.PI*2); ctx.fill(); }
+}
+
+/* ── Wi‑Fi ──────────────────────────────────────────── */
+function choose(net) {
+  selected=net; el('picker').hidden=true; el('join').hidden=false;
+  el('chosen').textContent=net.manual?'其他网络':ssidText(net.ssid);
+  el('manual').hidden=!net.manual; el('ssid').required=!!net.manual; el('ssid').value='';
+  el('pass-row').hidden=net.security==='open'; el('open-hint').hidden=!net.manual;
+  el('password').required=!net.manual && net.security!=='open'; el('password').value='';
+  el('feedback').textContent=''; el('feedback').classList.remove('is-error');
+  (net.manual?el('ssid'):net.security==='open'?el('connect'):el('password')).focus();
+}
+el('other').onclick=()=>choose({manual:true});
+el('back-list').onclick=()=>{selected=null;el('password').value='';el('join').hidden=true;el('picker').hidden=false;el('rescan').focus();};
+el('rescan').onclick=()=>scanWifi(true);
+async function scanWifi(force=false) {
+  if(scanning || !setup) return;
+  scanning=true; el('rescan').disabled=true; el('scan-state').textContent='正在扫描 2.4 GHz 网络…';
+  try {
+    async function results() {
+      const response=await fetch('/api/networks',{cache:'no-store',signal:AbortSignal.timeout(5000)});
+      if(!response.ok) throw Error();
+      return response.json();
+    }
+    let result=await results();
+    if(!result.busy && (force || !result.fresh || result.failed)) {
+      const start=await fetch('/api/scan',{method:'POST',headers:{'X-Aphelion':'setup'},signal:AbortSignal.timeout(5000)});
+      if(!start.ok) throw Error();
+      result.busy=true;
+    }
+    for(let i=0;result.busy && i<35;i++) {
+      await new Promise(resolve=>setTimeout(resolve,750));
+      result=await results();
+    }
+    if(result.busy || result.failed) throw Error();
+    const list=el('net-list'); list.replaceChildren();
+    for(const net of result.networks) {
+      const li=document.createElement('li'), btn=document.createElement('button'), name=document.createElement('strong'),
+            meta=document.createElement('span'), info=document.createElement('small'), bars=document.createElement('span');
+      btn.type='button'; btn.className='ap-item'; btn.disabled=!net.supported;
+      name.textContent=ssidText(net.ssid);
+      const level=net.rssi>=-60?3:net.rssi>=-75?2:1, signal=['','弱','中','强'][level];
+      info.textContent=(net.ssid===connectedId?'已连接 · ':'')+(net.supported?(net.security==='open'?'开放':net.security):'暂不支持')+' · '+signal;
+      bars.className='ap-signal'; bars.dataset.level=level; bars.setAttribute('aria-hidden','true'); bars.innerHTML='<i></i><i></i><i></i>';
+      meta.className='ap-item__meta'; meta.append(info,bars);
+      btn.append(name,meta); btn.onclick=()=>choose(net); li.append(btn); list.append(li);
+    }
+    el('scan-state').textContent=result.networks.length?result.networks.length+' 个网络':'没有找到 2.4 GHz 网络，可重新扫描。';
+    lastScan=Date.now();
+  } catch { el('scan-state').textContent='扫描未完成，请重新扫描。'; }
+  finally { scanning=false; el('rescan').disabled=false; }
+}
+
+/* ── 工具箱（预留入口） ─────────────────────────────────
+   固件提供某个工具后，把它的 available 设为 true，
+   并在 startTool() 里接入对应的 REST 配置和 /ws 订阅。 */
+const GLYPH = {
+  wifi:'<rect class="f" x="2" y="28" width="5" height="10"/><rect class="f" x="11" y="14" width="5" height="24"/><rect class="f" x="20" y="22" width="5" height="16"/><rect class="f" x="29" y="32" width="5" height="6"/><rect class="f" x="38" y="34" width="5" height="4"/><rect class="f" x="47" y="8" width="5" height="30"/><rect class="o" x="56" y="2" width="5" height="36"/><rect class="f" x="65" y="18" width="5" height="20"/><rect class="f" x="74" y="33" width="5" height="5"/><rect class="f" x="83" y="30" width="5" height="8"/><rect class="f" x="92" y="20" width="5" height="18"/><rect class="f" x="101" y="26" width="5" height="12"/><rect class="f" x="110" y="34" width="5" height="4"/>',
+  ble:'<circle class="f" cx="8" cy="20" r="4"/><circle class="f" cx="30" cy="10" r="2.5"/><circle class="f" cx="44" cy="28" r="3.5"/><circle class="o" cx="66" cy="16" r="5"/><circle class="f" cx="86" cy="30" r="2"/><circle class="f" cx="100" cy="12" r="3"/><circle class="f" cx="122" cy="24" r="2.5"/><path class="h" d="M66 4a12 12 0 0 1 0 24M66 0a16 16 0 0 1 0 32"/>',
+  scope:'<path d="M2 20C10 4 18 4 26 20S42 36 50 20 66 4 74 20 90 36 98 20 114 4 122 20"/><path class="h" d="M2 2H130" stroke-dasharray="2 4"/><circle class="o" cx="122" cy="20" r="3.5"/>',
+  pwm:'<path d="M2 34H14V6H34V34H54V6H74V34H94V6H114V34H130"/><path class="os" d="M14 2H34"/>'
+};
+const TOOLS = [
+  {id:'wifi-scan', name:'Wi‑Fi 分析', phase:0, glyph:'wifi', spec:'2.4 GHz · 信道 1–13',
+   desc:'扫描附近的 AP，用信道图展示每个信道上的 AP 数量和信号强度。同名 AP 按 BSSID 分开列出。',
+   items:[['显示字段','SSID · BSSID · RSSI'],['信道与加密','信道 · 加密方式'],['信道图','AP 数量 · 强度分布'],['扫描调度','与 BLE 扫描轮流执行']]},
+  {id:'ble-scan', name:'BLE 扫描', phase:0, glyph:'ble', spec:'NimBLE',
+   desc:'按需扫描附近的 BLE 设备，查看名称、地址、信号强度和广播内容。扫描期间控制台保持可用。',
+   items:[['设备信息','名称 · 地址 · RSSI'],['广播内容','服务 UUID · 广播数据'],['协议栈','NimBLE'],['扫描调度','与 Wi‑Fi 扫描轮流执行']]},
+  {id:'scope', name:'数字示波器', phase:0, glyph:'scope', spec:'GPIO4 · ADC1 · 20 kS/s',
+   desc:'单通道采集低压波形，显示波形、电压和削顶状态。用跳线连接 GPIO5 和 GPIO4，可以直接看到 PWM 输出。',
+   items:[['输入','GPIO4 · ADC1 单通道'],['默认采样率','20 kS/s'],['刷新','最多 10 帧/秒，优先最新'],['无跳线时','标明「演示」的合成波形']]},
+  {id:'pwm', name:'PWM 发生器', phase:0, glyph:'pwm', spec:'GPIO5 · LEDC',
+   desc:'在 GPIO5 输出方波，网页上调节频率和占空比。停止、控制连接断开或固件重启时，输出自动置低。',
+   items:[['输出','GPIO5 · LEDC 方波'],['可调参数','频率 · 占空比'],['安全','停止 / 断连 / 重启时置低'],['回环验收','100 Hz · 50% → 周期约 10 ms']]},
+  {id:'net-diag', name:'网络诊断', phase:1, spec:'Ping · DNS · HTTP · TCP/UDP',
+   desc:'临时接入上游 Wi‑Fi 做连通性检查，结果区分「目标可达」「缺少上游网络」和「请求超时」。',
+   items:[['检查项','Ping · DNS · HTTP'],['回显','TCP / UDP'],['上游网络','支持临时接入'],['BLE 调试','指定设备的 GATT 发现与读取']]},
+  {id:'logic', name:'逻辑分析', phase:2, spec:'RMT · 单通道',
+   desc:'用 RMT 捕获单通道数字信号，查看电平变化和时序。',
+   items:[['采集','RMT 单通道'],['计数','PCNT 频率 / 脉冲计数'],['验收','板上 GPIO 回环']]},
+  {id:'serial', name:'串口终端', phase:2, spec:'UART · I²C · SPI',
+   desc:'UART 收发终端，以及 I²C、SPI 总线调试。',
+   items:[['终端','UART'],['总线调试','I²C · SPI'],['验收','GPIO 回环 · 外接设备实测']]},
+  {id:'gpio', name:'GPIO 控制', phase:2, spec:'GPIO · PCNT',
+   desc:'读写引脚电平，统计频率和脉冲数。',
+   items:[['引脚','输入 / 输出电平'],['计数','PCNT 频率 / 脉冲'],['资源','与其他工具统一分配 GPIO']]},
+  {id:'signal', name:'信号分析', phase:3, spec:'FFT · CRC · 编码',
+   desc:'对示波器采样做低频 FFT，并提供 CRC、进制和编码转换。',
+   items:[['频谱','低频 FFT（复用示波器数据）'],['校验','CRC'],['转换','进制 · 编码']]},
+  {id:'system', name:'系统工具', phase:3, spec:'内存 · LittleFS',
+   desc:'查看内存使用，管理 LittleFS 文件。现有 Wi‑Fi 配置所在的 NVS 分区保持不变。',
+   items:[['监控','剩余堆内存'],['文件','LittleFS 管理'],['存储','保留现有 NVS 分区']]}
+];
+const PHASE = ['首版','后续 · 阶段 1','后续 · 阶段 2','后续 · 阶段 3'];
+function renderTools() {
+  for (const t of TOOLS) {
+    const b = document.createElement('button');
+    b.type='button'; b.className='ap-tile ap-tool '+(t.phase?'ap-w4 ap-m6 ap-tool--compact':'ap-w6'); b.dataset.tool=t.id;
+    b.innerHTML = '<span class="ap-tool__phase"><span></span><i aria-hidden="true">→</i></span>'+
+      (t.glyph?'<svg class="ap-tool__glyph" viewBox="0 0 132 40" aria-hidden="true">'+GLYPH[t.glyph]+'</svg>':'')+
+      '<strong class="ap-tool__name"></strong><span class="ap-tool__spec"></span><span class="ap-tool__desc"></span>';
+    b.querySelector('.ap-tool__phase span').textContent = PHASE[t.phase];
+    b.querySelector('.ap-tool__name').textContent = t.name;
+    b.querySelector('.ap-tool__spec').textContent = t.spec;
+    b.querySelector('.ap-tool__desc').textContent = t.desc;
+    b.onclick = () => openTool(t);
+    el(t.phase ? 'tools-next' : 'tools-v1').append(b);
+  }
+}
+let toolOpen = null;
+function openTool(t) {
+  toolOpen = t;
+  el('tool-grid').hidden = true; el('tool-detail').hidden = false;
+  el('td-phase').textContent = PHASE[t.phase];
+  el('td-spec').textContent = t.spec;
+  el('td-name').textContent = t.name;
+  el('td-desc').textContent = t.desc;
+  const dl = el('td-items'); dl.replaceChildren();
+  for (const [k,v] of t.items) { const row=document.createElement('div'), dt=document.createElement('dt'), dd=document.createElement('dd'); dt.textContent=k; dd.textContent=v; row.append(dt,dd); dl.append(row); }
+  el('td-state').textContent = t.available ? '工具已就绪。' : '当前固件还没有提供这个工具。';
+  el('td-start').disabled = !t.available;
+  window.scrollTo({top:0}); el('tool-back').focus();
+}
+el('tool-back').onclick = () => {
+  const t = toolOpen; toolOpen = null;
+  el('tool-detail').hidden = true; el('tool-grid').hidden = false;
+  document.querySelector('[data-tool="'+(t?.id||'')+'"]')?.focus();
+};
+el('td-start').onclick = () => { if (toolOpen?.available) startTool(toolOpen); };
+function startTool(t) { /* 预留：接入工具服务后在这里发起 REST 配置并订阅 /ws */ }
+
+/* ── 状态轮询 ───────────────────────────────────────── */
+function show(data) {
+  lastData = data;
+  for (const id of ['temperature','humidity','spl','dbfs']) el(id).textContent=Number.isFinite(data[id])?data[id].toFixed(1):'—';
+  for (const id of ['environment','sound']) el(id).textContent=data[id];
+  el('hum-bar').style.width=Number.isFinite(data.humidity)?Math.min(100,Math.max(0,data.humidity))+'%':'0';
+  meter(data.dbfs);
+  const states={setup:'等待配网',connecting:'正在连接路由器…',online:'已接入局域网',failed:'连接中断或失败，可检查网络名称和密码后重试。'};
+  setup=data.setup; connectedId=data.network==='online'?data.ssid:'';
+  el('network-state').textContent=(states[data.network]||'正在启动')+(connectedId?' · '+ssidText(connectedId):'');
+  if (data.network==='online' && !data.saved) el('network-state').textContent+='（设置尚未保存）';
+  const link=el('address'); link.hidden=!data.ip;
+  if (data.ip) { link.href='http://'+data.ip+'/'; link.textContent=link.href; }
+  el('setup-note').textContent=data.setup?'接入成功后，将手机切回同一局域网，打开上方地址。':'更换路由器时，请连接设备热点 '+data.ap+'，再打开 192.168.4.1。';
+  el('idle').hidden=!!setup;
+  el('join').hidden=!setup || !selected; el('picker').hidden=!setup || !!selected; el('connect').disabled=submitting||data.network==='connecting';
+  if (first && data.setup && data.network!=='online') selectPage('wifi');
+  first=false; el('live').textContent='设备在线'; el('live').className='ap-lamp is-on'; el('offline').hidden=true;
+  fillAbout(data);
+  history.push({at:Date.now(),value:data.dbfs}); plot();
+}
+async function poll() {
+  const revision = oledRevision;
+  try {
+    const response=await fetch('/api/status',{cache:'no-store',signal:AbortSignal.timeout(5000)});
+    if (!response.ok) throw Error();
+    const data = await response.json();
+    show(data);
+    if (!oledPending && revision === oledRevision) showOled(data.oled_view);
+  } catch {
+    el('live').textContent='连接中断'; el('live').className='ap-lamp'; el('offline').hidden=false; el('connect').disabled=true;
+    if (!oledPending && revision === oledRevision) showOled('');
+    for (const id of ['temperature','humidity','spl','dbfs']) el(id).textContent='—';
+    for (const id of ['environment','sound','network-state']) el(id).textContent='等待读数';
+    el('hum-bar').style.width='0'; meter(null); fillAbout(null);
+    el('address').hidden=true;
+  } finally { setTimeout(poll,1000); }
+}
+el('join').onsubmit=async event => {
+  event.preventDefault(); if(!selected || submitting) return;
+  const fb=el('feedback'), params=new URLSearchParams();
+  if(selected.manual) params.set('ssid',el('ssid').value); else params.set('ssid_hex',selected.ssid);
+  params.set('password',selected.security==='open'?'':el('password').value);
+  if (new TextEncoder().encode(el('ssid').value).length>32) { fb.textContent='网络名称最多 32 字节。'; fb.classList.add('is-error'); return; }
+  submitting=true; el('connect').disabled=true; fb.classList.remove('is-error'); fb.textContent='正在提交…';
+  try {
+    const r=await fetch('/api/wifi',{method:'POST',headers:{'X-Aphelion':'setup'},body:params,signal:AbortSignal.timeout(6000)});
+    if (!r.ok) throw Error(r.status===400?'请检查网络名称和密码长度。':r.status===409?'已有连接请求，请稍候。':'提交失败，请确认已连上设备热点。');
+    el('password').value=''; fb.textContent='已提交，请查看左侧路由器状态。';
+  } catch(e) { fb.textContent=e.message||'提交失败，请重试。'; fb.classList.add('is-error'); }
+  finally { submitting=false; }
+};
+
+renderSettings(); renderAbout(); renderTools(); applySettings();
+window.addEventListener('resize',plot); poll();
+</script>
+</body></html>
